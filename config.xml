@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <database>
+        <host>mysql-db-smi-tp.l.aivencloud.com</host>
+        <port>23984</port>
+        <username>avnadmin</username>
+        <password>AVNS_F801fjmN-yhfTnx2Gma</password>
+        <dbname>SMI</dbname>
+    </database>
+</config>
