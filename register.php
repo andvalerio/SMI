@@ -32,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
         // Inserir novo utilizador 
         $token = bin2hex(random_bytes(32)); // Gerar token de verificação
-        $stmt = $conn->prepare("INSERT INTO user (username, full_name, email, password_hash, valid) VALUES (?, ?, ?, ?, ?)");
-        $valid = false; // Conta não validada por padrão
-        $stmt->bind_param("ssssb", $username, $full_name, $email, $password_hash, $valid);
+        $stmt = $conn->prepare("INSERT INTO user (username, full_name, email, password_hash, valid, verification_token) VALUES (?, ?, ?, ?, ?, ?)");
+        $valid = 0; // Conta não validada por padrão
+        $stmt->bind_param("ssssis", $username, $full_name, $email, $password_hash, $valid, $token);
         
         if ($stmt->execute()) {
             // Enviar email de verificação
@@ -52,8 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Subject = 'Verifica a tua conta';
             $mail->Body = "Clica no link para verificar a conta:\n\nhttp://teusite.com/verify.php?token=$token";
 
-            $mail->send();
-            $msg = "Registo feito. Verifica o teu email.";
+            if ($mail->send()) {
+              $msg = "Registo feito. Verifica o teu email.";
+            } else {
+              $msg = "Erro ao enviar email: " . $mail->ErrorInfo;
+            }
+            
         } else {
             $msg = "Erro ao registar: " . $conn->error;
         }

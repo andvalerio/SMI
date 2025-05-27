@@ -15,8 +15,8 @@ if ($token) {
         $stmt->bind_result($userId);
         $stmt->fetch();
 
-        $update = $conn->prepare("UPDATE user SET valid = '1' WHERE id = ?");
-        $update->bind_param("i", $userId);
+        $update = $conn->prepare("UPDATE user SET valid = 1, verification_token = NULL WHERE verification_token = ?");
+        $update->bind_param("s", $token);
         $update->execute();
         $update->close();
 
