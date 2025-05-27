@@ -2,6 +2,15 @@
 require_once 'vendor/autoload.php';
 require_once 'db.php';
 
+// Carregar config.xml para as credenciais do Mailjet
+$xml = simplexml_load_file("config.xml") or die("No XML file found");
+$mailjetApiKey = (string) $xml->phpMailer->APIKey;
+$mailjetApiSecret = (string) $xml->phpMailer->APISecret;
+$mailjetFromEmail = (string) $xml->phpMailer->fromEmail;
+$mailjetFromName = (string) $xml->phpMailer->fromName;
+$server = (string) $xml->server->host;
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn = db_connect();
 
@@ -40,22 +49,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Enviar email de verificação
             $mail = new PHPMailer\PHPMailer\PHPMailer();
             $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com';
+            $mail->Host = 'in-v3.mailjet.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'teuemail@gmail.com';
-            $mail->Password = 'tuapalavrapasseouappkey';
+            $mail->Username = $mailjetApiKey;
+            $mail->Password = $mailjetApiSecret;
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
-            $mail->setFrom('teuemail@gmail.com', 'Sistema de Álbuns');
+            $mail->setFrom($mailjetFromEmail, $mailjetFromName);
             $mail->addAddress($email, $full_name);
             $mail->Subject = 'Verifica a tua conta';
-            $mail->Body = "Clica no link para verificar a conta:\n\nhttp://teusite.com/verify.php?token=$token";
+            $mail->Body = "Clica no link para verificar a conta:\n\n$server/verify.php?token=$token";
 
             if ($mail->send()) {
               $msg = "Registo feito. Verifica o teu email.";
             } else {
-              $msg = "Erro ao enviar email: " . $mail->ErrorInfo;
+                $msg = "Erro ao enviar email: " . $mail->ErrorInfo;
             }
             
         } else {

@@ -10,7 +10,10 @@
     <phpMailer>
         <APIKey>5a1f2dd5e96d5a7e5eefe0b9a29bde38</APIKey>
         <APISecret>99e733d6a4be5796e94147d263e763c1</APISecret>
-        <fromEmail></fromEmail>
-        <fromName></fromName>
+        <fromEmail>smi.projeto.g30@gmail.com</fromEmail>
+        <fromName>Photo Gallery</fromName>
     </phpMailer>
+    <server>
+        <host>http://localhost/examples-smi/TrabalhoFinal/SMI</host>
+    </server>
 </config>
