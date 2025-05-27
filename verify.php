@@ -6,7 +6,7 @@ $token = $_GET['token'] ?? null;
 $verificado = false;
 
 if ($token) {
-    $stmt = $conn->prepare("SELECT id FROM user WHERE valid = ?");
+    $stmt = $conn->prepare("SELECT id FROM user WHERE verification_token = ?");
     $stmt->bind_param("s", $token);
     $stmt->execute();
     $stmt->store_result();
@@ -15,8 +15,8 @@ if ($token) {
         $stmt->bind_result($userId);
         $stmt->fetch();
 
-        $update = $conn->prepare("UPDATE user SET valid = 1, verification_token = NULL WHERE verification_token = ?");
-        $update->bind_param("s", $token);
+        $update = $conn->prepare("UPDATE user SET valid = 1, verification_token = NULL WHERE id = ?");
+        $update->bind_param("i", $userId);
         $update->execute();
         $update->close();
 
