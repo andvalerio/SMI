@@ -78,35 +78,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!-- Formulário HTML -->
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
   <meta charset="UTF-8">
   <title>Registo</title>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <link rel="stylesheet" href="styles/register.css">
 </head>
+
 <body>
-  <h2>Registar nova conta</h2>
-  <?php if (isset($msg)) echo "<p><strong>$msg</strong></p>"; ?>
-  <form action="" method="POST">
-    <label>Nome de utilizador:</label><br>
-    <input type="text" name="username" required><br><br>
-
-    <label>Nome completo:</label><br>
-    <input type="text" name="full_name" required><br><br>
-
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
-
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
-
-    <div class="g-recaptcha" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div><br>
-
-    <input type="submit" value="Criar Conta">
-  </form>
-
-  <p>Já tens conta? <a href="login.php">Faz login</a></p>
+  <div class="container">
+    <div class="left-side">
+      Create your<br>account
+    </div>
+    <div class="right-side">
+      <div class="register-box">
+        <h2>REGISTAR</h2>
+        <?php if (isset($msg)) echo "<p class='msg'><strong>$msg</strong></p>"; ?>
+        <form action="" method="POST">
+          <input type="text" name="username" placeholder="Nome de utilizador" required>
+          <input type="text" name="full_name" placeholder="Nome completo" required>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="password" name="password" placeholder="Password" required>
+          <div class="g-recaptcha" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div>
+          <input type="submit" value="Criar Conta">
+        </form>
+        <div class="login-link">
+          Já tens conta? <a href="login.php">Faz login</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
+
 </html>
