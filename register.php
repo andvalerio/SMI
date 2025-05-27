@@ -18,11 +18,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$captchaSuccess) {
         $msg = "Erro: CAPTCHA inválido.";
     } else {
-        $token = bin2hex(random_bytes(32));
+        // Verificar se o utilizador já existe
+        $stmt = $conn->prepare("SELECT id FROM user WHERE username = ? OR email = ?");
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $msg = "Erro: Nome de utilizador ou email já existe.";
+            $stmt->close();
+            $conn->close();
+            exit;
+        }
+        $stmt->close();
+        // Inserir novo utilizador 
+        $token = bin2hex(random_bytes(32)); // Gerar token de verificação
         $stmt = $conn->prepare("INSERT INTO user (username, full_name, email, password_hash, valid) VALUES (?, ?, ?, ?, ?)");
-        $valid = $token; // Guardamos o token no campo "valid" temporariamente
-        $stmt->bind_param("sssss", $username, $full_name, $email, $password_hash, $valid);
-
+        $valid = false; // Conta não validada por padrão
+        $stmt->bind_param("ssssb", $username, $full_name, $email, $password_hash, $valid);
+        
         if ($stmt->execute()) {
             // Enviar email de verificação
             $mail = new PHPMailer\PHPMailer\PHPMailer();
