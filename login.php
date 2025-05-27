@@ -5,7 +5,7 @@ require_once 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn = db_connect();
 
-    $email = $_POST['email'] ?? '';
+    $email_or_username = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
     $captcha = $_POST['g-recaptcha-response'] ?? '';
 
@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$captchaSuccess) {
         $msg = "Erro: CAPTCHA inválido.";
     } else {
-        $stmt = $conn->prepare("SELECT id, password_hash, valid, username FROM user WHERE email = ?");
-        $stmt->bind_param("s", $email);
+        $stmt = $conn->prepare("SELECT id, password_hash, valid, username FROM user WHERE email = ? OR username = ?");
+        $stmt->bind_param("ss", $email_or_username, $email_or_username);
         $stmt->execute();
         $stmt->store_result();
 
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h2>LOGIN</h2>
                 <?php if (isset($msg)) echo "<p class='msg'><strong>$msg</strong></p>"; ?>
                 <form action="" method="POST">
-                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="text" name="email" placeholder="Email ou nome de utilizador:" required>
                     <input type="password" name="password" placeholder="Password" required>
                     <div class="g-recaptcha" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div>
                     <input type="submit" value="Entrar">

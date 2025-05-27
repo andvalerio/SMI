@@ -42,7 +42,7 @@ body, html {
   margin-bottom: 20px;
 }
 
-.login-box form input[type="email"],
+.login-box form input[type="text"],
 .login-box form input[type="password"] {
   width: 100%;
   padding: 12px;
