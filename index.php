@@ -1,17 +1,17 @@
 <?php
-    session_start();
-    require_once 'db.php';
+session_start();
+require_once 'db.php';
 
-    if (!isset($_SESSION['user_id'])) {
-        header("Location: login.php");
-        exit;
-    }
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
 
-    $conn = db_connect();
-    $userId = $_SESSION['user_id'];
+$conn = db_connect();
+$userId = $_SESSION['user_id'];
 
-    // Buscar os álbuns associados ao utilizador
-    $query = "
+// Buscar os álbuns associados ao utilizador
+$query = "
         SELECT 
             a.id, a.title, a.description,
             (SELECT p.filepath FROM photo p WHERE p.album_id = a.id ORDER BY p.upload_at ASC LIMIT 1) AS cover
@@ -19,16 +19,17 @@
         JOIN user_album ua ON a.id = ua.album_id
         WHERE ua.user_id = ?
     ";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $albums = $result->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-    $conn->close();
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+$albums = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Photo Gallery</title>
@@ -59,11 +60,11 @@
         </div>
 
         <div class="content">
-            <h2>Os teus álbuns</h2>
             <div class="albums-grid">
                 <?php if (empty($albums)): ?>
                     <p>Não tens álbuns associados.</p>
                 <?php else: ?>
+                    <h2>Os teus álbuns</h2>
                     <?php foreach ($albums as $album): ?>
                         <div class="album-card">
                             <a href="album.php?id=<?= $album['id'] ?>">
@@ -82,4 +83,5 @@
         </div>
     </div>
 </body>
+
 </html>
