@@ -1,16 +1,16 @@
 <?php
 
-$CONTENT_FOLDER = "content/";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $erros = "Erros: ";
+    $CONTENT_FOLDER = "content/";
+    $erros = "";
 
     // garantir que o nome nao tem espaços ou caracteres diferentes
     $album_name = trim($_POST["albumname"]);
     $album_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $album_name);
 
     if ($album_name == null) {
-        $erros .= "Nome inválido para título de álbum. <br>";
+        $erros .= "Erros: Nome inválido para título de álbum. <br>";
     } else {
         $album_folder = $CONTENT_FOLDER . $album_name . "/";
 
@@ -45,10 +45,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     $erros .= "Tipo de ficheiro '$fileName' não permitido. <br>";
                 }
+
+
+                // inserir as imagens da base de dados
+                //insert_image_in_database($album_name, $erros);
+
             }
         } else {
             $erros .= "Nenhuma foto enviada. <br>";
         }
+
     }
 }
 
