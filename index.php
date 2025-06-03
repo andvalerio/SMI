@@ -33,68 +33,6 @@
     <meta charset="UTF-8">
     <title>Photo Gallery</title>
     <link rel="stylesheet" href="styles/homepage.css">
-    <style>
-        .user-menu {
-            position: relative;
-            display: inline-block;
-        }
-
-        .user-dropdown {
-            display: none;
-            position: absolute;
-            top: 25px;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ccc;
-            padding: 10px;
-            z-index: 99;
-        }
-
-        .user-menu:hover .user-dropdown {
-            display: block;
-        }
-
-        .user-dropdown a {
-            display: block;
-            padding: 5px 10px;
-            color: black;
-            text-decoration: none;
-        }
-
-        .user-dropdown a:hover {
-            background-color: #f0f0f0;
-        }
-
-        .albums-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .album-card {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .album-card img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header div strong {
-            cursor: pointer;
-        }
-    </style>
 </head>
 
 <body>
