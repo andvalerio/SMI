@@ -15,14 +15,20 @@ body, html {
 }
 
 .left-side {
-  flex: 1;
-  background-color: #ccc;
+  flex: 1.5;
+  background-image: url('imgs/login.jpg');
+  background-size: cover;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.5em;
   font-weight: bold;
+  color: white;
+  text-align: center;
 }
+
+
 
 .right-side {
   flex: 1;
