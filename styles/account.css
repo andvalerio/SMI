@@ -1,0 +1,140 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  background-color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+header div strong {
+  cursor: pointer;
+}
+
+header input[type="text"] {
+  padding: 5px;
+  width: 300px;
+}
+
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown {
+  display: none;
+  position: absolute;
+  top: 25px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 99;
+}
+
+.user-menu:hover .user-dropdown {
+  display: block;
+}
+
+.user-dropdown a {
+  display: block;
+  padding: 5px 10px;
+  color: black;
+  text-decoration: none;
+}
+
+.user-dropdown a:hover {
+  background-color: #f0f0f0;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+.form-container {
+  max-width: 400px;
+  width: 100%;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-container label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.form-container input[type="submit"] {
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.form-container input[type="submit"]:hover {
+  background-color: #555;
+}
+
+.form-container .danger-button {
+  background-color: #c0392b;
+  margin-top: 10px;
+}
+
+.form-container .danger-button:hover {
+  background-color: #e74c3c;
+}
+
+.message {
+  text-align: center;
+  margin-top: 10px;
+  color: #333;
+}
+
+.album-history {
+  max-width: 500px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.album-history h2 {
+  margin-top: 0;
+}
+
+.album-history ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.album-history li {
+  margin-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+}

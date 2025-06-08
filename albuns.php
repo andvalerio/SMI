@@ -10,21 +10,19 @@ if (!isset($_SESSION['user_id'])) {
 $conn = db_connect();
 $userId = $_SESSION['user_id'];
 
-// Buscar fotos recentes dos álbuns que o utilizador pode ver
 $query = "
-    SELECT p.filepath, p.upload_at, a.title
-    FROM photo p
-    JOIN album a ON p.album_id = a.id
-    JOIN user_album ua ON ua.album_id = a.id
+    SELECT 
+        a.id, a.title, a.description,
+        (SELECT p.filepath FROM photo p WHERE p.album_id = a.id ORDER BY p.upload_at ASC LIMIT 1) AS cover
+    FROM album a
+    JOIN user_album ua ON a.id = ua.album_id
     WHERE ua.user_id = ?
-    ORDER BY p.upload_at DESC
-    LIMIT 24
 ";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
-$photos = $result->fetch_all(MYSQLI_ASSOC);
+$albums = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 $conn->close();
 ?>
@@ -33,7 +31,7 @@ $conn->close();
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Photo Gallery</title>
+    <title>Meus Álbuns</title>
     <link rel="stylesheet" href="styles/homepage.css">
 </head>
 <body>
@@ -60,11 +58,24 @@ $conn->close();
     </div>
 
     <div class="content">
-        <h2>Fotos Recentes</h2>
-        <div class="photos">
-            <?php foreach ($photos as $photo): ?>
-                <div><img src="<?= htmlspecialchars($photo['filepath']) ?>" alt="Foto" style="width:100%; height:100%; object-fit:cover;"></div>
-            <?php endforeach; ?>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>Os teus álbuns</h2>
+            <button onclick="location.href='criar_album.php'" style="padding: 8px 12px;">➕ Criar Álbum</button>
+        </div>
+
+        <div class="albums-grid">
+            <?php if (empty($albums)): ?>
+                <p>Não tens álbuns associados.</p>
+            <?php else: ?>
+                <?php foreach ($albums as $album): ?>
+                    <div class="album-card">
+                        <a href="album.php?id=<?= $album['id'] ?>">
+                            <img src="<?= htmlspecialchars($album['cover'] ?? 'images/placeholder.jpg') ?>" alt="Capa do álbum">
+                            <p><?= htmlspecialchars($album['title']) ?></p>
+                        </a>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 
