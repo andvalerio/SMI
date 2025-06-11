@@ -1,6 +1,6 @@
 <?php
 $site_name = "My Photo Gallery";
-$CONTENT_FOLDER = "content/";
+$CONTENT_FOLDER = "../../assets/content/";
 $max_file_size = 5 * 1024 * 1024; // 5MB
 $allowed_extensions = ["jpg", "jpeg", "png", "gif"];
 

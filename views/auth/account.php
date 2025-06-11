@@ -1,10 +1,14 @@
 <?php
-session_start();
-require_once 'db.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
+require_once '../../includes/session.php';
+require_once '../../includes/db.php';
+
+ if (!isLoggedIn()) {
+    header('Location: login.php');
+    exit();
 }
 
 $conn = db_connect();
@@ -54,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['save_changes'])) {
     $stmt->close();
 }
 
-// Buscar dados atuais
+// dados atuais
 $stmt = $conn->prepare("SELECT username, email, full_name FROM user WHERE id = ?");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
@@ -62,7 +66,7 @@ $stmt->bind_result($currentUsername, $currentEmail, $currentFullName);
 $stmt->fetch();
 $stmt->close();
 
-// Buscar álbuns criados pelo utilizador
+// álbuns criados pelo utilizador
 $stmt = $conn->prepare("SELECT id, title, created_at FROM album WHERE owner_id = ?");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
@@ -78,11 +82,11 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>Conta</title>
-    <link rel="stylesheet" href="styles/account.css">
+    <link rel="stylesheet" href="../../assets/styles/account.css">
 </head>
 <body>
     <header>
-        <div><strong onclick="location.href='index.php'">Photo Gallery</strong></div>
+        <div><strong onclick="location.href='../album/homepage.php'">Photo Gallery</strong></div>
         <input type="text" placeholder="search">
         <div>
             <button title="Definições">⚙️</button>
@@ -90,7 +94,7 @@ $conn->close();
                 <button title="Conta">👤</button>
                 <div class="user-dropdown">
                     <a href="account.php">Alterar dados da conta</a>
-                    <a href="logout.php">Terminar sessão</a>
+                    <a href="../logout.php">Terminar sessão</a>
                 </div>
             </div>
         </div>
@@ -98,7 +102,7 @@ $conn->close();
 
     <div class="main">
         <div class="sidebar">
-            <button onclick="location.href='albuns.php'">🖼️</button>
+            <button onclick="location.href='../album/albuns.php'">🖼️</button>
             <button>👍</button>
             <button>👥</button>
         </div>

@@ -1,10 +1,14 @@
 <?php
-session_start();
-require_once 'db.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
+require_once '../../includes/session.php';
+require_once '../../includes/db.php';
+
+if (!isLoggedIn()) {
+    header('Location: ../auth/login.php');
+    exit();
 }
 
 $conn = db_connect();
@@ -32,19 +36,19 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>Meus Álbuns</title>
-    <link rel="stylesheet" href="styles/homepage.css">
+    <link rel="stylesheet" href="../../assets/styles/homepage.css">
 </head>
 <body>
 <header>
-    <div><strong onclick="location.href='index.php'">Photo Gallery</strong></div>
+    <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
     <input type="text" placeholder="search">
     <div>
         <button title="Definições">⚙️</button>
         <div class="user-menu">
             <button title="Conta">👤</button>
             <div class="user-dropdown">
-                <a href="account.php">Alterar dados da conta</a>
-                <a href="logout.php">Terminar sessão</a>
+                <a href="../auth/account.php">Alterar dados da conta</a>
+                <a href="../logout.php">Terminar sessão</a>
             </div>
         </div>
     </div>
@@ -70,7 +74,7 @@ $conn->close();
                 <?php foreach ($albums as $album): ?>
                     <div class="album-card">
                         <a href="album.php?id=<?= $album['id'] ?>">
-                            <img src="<?= htmlspecialchars($album['cover'] ?? 'images/placeholder.jpg') ?>" alt="Capa do álbum">
+                            <img src="<?= htmlspecialchars($album['cover'] ?? '../../assets/styles/imgs/placeholder.png') ?>" alt="Capa do álbum">
                             <p><?= htmlspecialchars($album['title']) ?></p>
                         </a>
                     </div>

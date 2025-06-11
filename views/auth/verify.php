@@ -1,5 +1,5 @@
 <?php
-require_once 'db.php';
+require_once '../../includes/db.php';
 $conn = db_connect();
 
 $token = $_GET['token'] ?? null;

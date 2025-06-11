@@ -33,7 +33,7 @@ function handleLogin($conn)
             if ($valid === 1 && password_verify($password, $hash)) {
                 $_SESSION['user_id'] = $userId;
                 $_SESSION['username'] = $username;
-                header("Location: ../index.php");
+                header("Location: ../../index.php");
                 exit;
             } elseif ($valid !== 1) {
                 $msg = "A tua conta ainda não está verificada.";

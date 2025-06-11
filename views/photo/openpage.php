@@ -1,10 +1,14 @@
 <?php
-session_start();
-require_once 'db.php';
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
+require_once '../../includes/session.php';
+require_once '../../includes/db.php';
+
+if (!isLoggedIn()) {
+    header('Location: ../auth/login.php');
+    exit();
 }
 
 $conn = db_connect();

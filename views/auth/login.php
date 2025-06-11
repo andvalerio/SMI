@@ -5,8 +5,7 @@ error_reporting(E_ALL);
 
 require_once '../../includes/db.php';
 require_once '../../includes/session.php';
-require_once '../../controllers/AuthController.php'; // para login
-session_start();
+require_once '../../controllers/AuthController.php';
 
 $msg = null;
 
