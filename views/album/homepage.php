@@ -111,7 +111,6 @@
                     <div style="margin-top: 4px; font-size: 13px; color: #333;">
                         Álbum: <?= htmlspecialchars($photo['title']) ?>
                     </div>
-                    <!-- Não tem likes/comentários aqui, pois a query não traz isso -->
                 </div>
             <?php endforeach; ?>
         </div>

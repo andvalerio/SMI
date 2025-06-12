@@ -95,7 +95,7 @@
 <div class="main">
     <div class="sidebar">
         <button onclick="location.href='albuns.php'">🖼️</button>
-        <button onclick="location.href='likes.php'">👍</button> <!-- Destaque no botão das likes -->
+        <button style="background-color: #ddd;" onclick="location.href='likes.php'">👍</button> <!-- Destaque no botão das likes -->
         <button>👥</button>
     </div>
 
