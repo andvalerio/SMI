@@ -57,7 +57,7 @@ $conn->close();
 <div class="main">
     <div class="sidebar">
         <button onclick="location.href='albuns.php'">🖼️</button>
-        <button>👍</button>
+        <button onclick="location.href='likes.php'">👍</button>
         <button>👥</button>
     </div>
 

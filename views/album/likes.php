@@ -14,15 +14,14 @@
     $conn = db_connect();
     $userId = $_SESSION['user_id'];
 
-    // Obter as 24 fotos mais recentes dos álbuns que o utilizador pode ver
+    // Obter todas as fotos que o utilizador deu like, mostrando filepath, filename, upload_at, título e id do álbum
     $query = "
     SELECT p.filepath, p.filename, p.upload_at, a.title, a.id AS album_id
-    FROM photo p
+    FROM photo_likes pl
+    JOIN photo p ON pl.photo_id = p.id
     JOIN album a ON p.album_id = a.id
-    JOIN user_album ua ON ua.album_id = a.id
-    WHERE ua.user_id = ?
-    ORDER BY p.upload_at DESC
-    LIMIT 24
+    WHERE pl.user_id = ?
+    ORDER BY pl.liked_at DESC
     ";
 
     $stmt = $conn->prepare($query);
@@ -38,7 +37,7 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Photo Gallery</title>
+    <title>Fotos Gostadas - Photo Gallery</title>
     <link rel="stylesheet" href="../../assets/styles/homepage.css">
     <style>
         .photo-card {
@@ -96,24 +95,27 @@
 <div class="main">
     <div class="sidebar">
         <button onclick="location.href='albuns.php'">🖼️</button>
-        <button onclick="location.href='likes.php'">👍</button>
+        <button onclick="location.href='likes.php'">👍</button> <!-- Destaque no botão das likes -->
         <button>👥</button>
     </div>
 
     <div class="content">
-        <h2>Fotos Recentes</h2>
+        <h2>Fotos que Gostaste</h2>
         <div class="photos">
-            <?php foreach ($photos as $photo): ?>
-                <div class="photo-card">
-                    <a href="album.php?id=<?= urlencode($photo['album_id'] ?? '') ?>">
-                        <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
-                    </a>
-                    <div style="margin-top: 4px; font-size: 13px; color: #333;">
-                        Álbum: <?= htmlspecialchars($photo['title']) ?>
+            <?php if (count($photos) === 0): ?>
+                <p>Não há fotos que tenhas gostado ainda.</p>
+            <?php else: ?>
+                <?php foreach ($photos as $photo): ?>
+                    <div class="photo-card">
+                        <a href="album.php?id=<?= urlencode($photo['album_id'] ?? '') ?>">
+                            <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
+                        </a>
+                        <div style="margin-top: 4px; font-size: 13px; color: #333;">
+                            Álbum: <?= htmlspecialchars($photo['title']) ?>
+                        </div>
                     </div>
-                    <!-- Não tem likes/comentários aqui, pois a query não traz isso -->
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 

@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["images"])) {
 </head>
 <body>
     <header>
-        <div><strong onclick="location.href='../album/homepage.php'">Photo Gallery</strong></div>
+        <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
         <input type="text" placeholder="search">
         <div>
             <button title="Definições">⚙️</button>
@@ -112,9 +112,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["images"])) {
     </header>
     <div class="main">
         <div class="sidebar">
-            <button onclick="location.href='../album/albuns.php'">🖼️</button>
+            <button onclick="location.href='albuns.php'">🖼️</button>
         </div>
         <div class="center-content">
+            <button onclick="location.href='album.php?id=<?= $albumId ?>'" style="margin-bottom: 15px;">← Voltar ao Álbum</button>
             <h2>Adicionar Fotos ao Álbum "<?=htmlspecialchars($album_name)?>"</h2>
             <?php if ($msg) echo "<div class='message'>$msg</div>"; ?>
             <form method="post" enctype="multipart/form-data">
