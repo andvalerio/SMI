@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 require_once '../includes/session.php';
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
+require_once '../includes/notifications.php';
 
 if (!isLoggedIn() || !isset($_POST['photo_id'])) {
     header('Location: ../views/auth/login.php');
@@ -31,6 +32,20 @@ if ($alreadyLiked == 0) {
     $insert->bind_param("ii", $photoId, $userId);
     $insert->execute();
     $insert->close();
+    // Obter dono da foto
+    $stmt = $conn->prepare("
+        SELECT upload_by FROM photo WHERE id = ?
+    ");
+    $stmt->bind_param("i", $photoId);
+    $stmt->execute();
+    $stmt->bind_result($photoOwnerId);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($photoOwnerId != $_SESSION['user_id']) {
+        addNotification($photoOwnerId, $_SESSION['username'] . " deu like numa das tuas fotos.");
+    }
+
 } else {
     $delete = $conn->prepare("DELETE FROM photo_likes WHERE photo_id = ? AND user_id = ?");
     $delete->bind_param("ii", $photoId, $userId);

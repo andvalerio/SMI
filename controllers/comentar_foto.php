@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 require_once '../includes/session.php';
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
+require_once '../includes/notifications.php';
 
 if (!isLoggedIn() || !isset($_POST['photo_id'], $_POST['comment'])) {
     header('Location: ../views/auth/login.php');
@@ -23,6 +24,20 @@ if ($comment !== '') {
     $stmt->bind_param("iis", $photoId, $userId, $comment);
     $stmt->execute();
     $stmt->close();
+    // Obter dono da foto
+    $stmt = $conn->prepare("
+        SELECT upload_by FROM photo WHERE id = ?
+    ");
+    $stmt->bind_param("i", $photoId);
+    $stmt->execute();
+    $stmt->bind_result($photoOwnerId);
+    $stmt->fetch();
+    $stmt->close();
+
+    if ($photoOwnerId != $_SESSION['user_id']) {
+        addNotification($photoOwnerId, $_SESSION['username'] . ' comentou numa das tuas fotos: "' . htmlspecialchars($comment) . '"');
+    }
+
     $conn->close();
 }
 

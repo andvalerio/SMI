@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
                 <div class="register-link">
                     Ainda não tens conta? <a href="register.php">Regista-te</a><br>
-                    <a href="#">Login usando código do álbum</a>
+                    <a href="login_codigo.php">Login usando código do álbum</a>
                 </div>
             </div>
         </div>

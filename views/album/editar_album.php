@@ -128,6 +128,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $conn->close();
+
+$notificacao_count = 0;
+if (isLoggedIn()) {
+    $conn = db_connect();
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE");
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $stmt->bind_result($notificacao_count);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -147,9 +159,10 @@ $conn->close();
 <body>
 <header>
     <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
-    <input type="text" placeholder="search">
     <div>
-        <button title="Definições">⚙️</button>
+        <button title="Notificações" onclick="location.href='notificacoes.php'">
+            🔔<?= $notificacao_count > 0 ? "($notificacao_count)" : "" ?>
+        </button>
         <div class="user-menu">
             <button title="Conta">👤</button>
             <div class="user-dropdown">
@@ -162,6 +175,7 @@ $conn->close();
 <div class="main">
     <div class="sidebar">
         <button onclick="location.href='albuns.php'">🖼️</button>
+        <button onclick="location.href='likes.php'">👍</button>
     </div>
     <div class="center-content">
         <div class="form-container">

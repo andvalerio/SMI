@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 require_once '../../includes/session.php';
 require_once '../../includes/db.php';
 require_once '../../includes/auth.php';
+require_once '../../includes/notifications.php';
 
 if (!isLoggedIn()) {
     header('Location: ../auth/login.php');
@@ -27,7 +28,7 @@ if (!$stmt->fetch()) {
 }
 $stmt->close();
 
-$can_upload = in_array($role, ['Administrador', 'Moderador']);
+$can_upload = in_array($role, ['Administrador', 'Moderador', 'Utilizador']);
 if (!$can_upload) {
     echo "Acesso negado.";
     exit;
@@ -71,7 +72,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["images"])) {
 
     if ($msg === "") {
         $msg = "Upload concluído com sucesso.";
+
+        $albumId = $_POST['album_id'] ?? null;
+        $uploadBy = $_SESSION['user_id'];
+
+        // Obter título do álbum
+        $albumTitleStmt = $conn->prepare("SELECT title FROM album WHERE id = ?");
+        $albumTitleStmt->bind_param("i", $albumId);
+        $albumTitleStmt->execute();
+        $albumTitleStmt->bind_result($albumTitle);
+        $albumTitleStmt->fetch();
+        $albumTitleStmt->close();
+
+        // Notificar os outros utilizadores do álbum
+        $notifyStmt = $conn->prepare("SELECT user_id FROM user_album WHERE album_id = ? AND user_id != ?");
+        $notifyStmt->bind_param("ii", $albumId, $uploadBy);
+        $notifyStmt->execute();
+        $notifyStmt->bind_result($otherUserId);
+        while ($notifyStmt->fetch()) {
+            addNotification($otherUserId, "Foram adicionadas novas fotos ao álbum \"$albumTitle\".");
+        }
+        $notifyStmt->close();
     }
+}
+
+$notificacao_count = 0;
+if (isLoggedIn()) {
+    $conn = db_connect();
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE");
+    $stmt->bind_param("i", $_SESSION['user_id']);
+    $stmt->execute();
+    $stmt->bind_result($notificacao_count);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
 }
 ?>
 <!DOCTYPE html>
@@ -98,9 +132,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["images"])) {
 <body>
     <header>
         <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
-        <input type="text" placeholder="search">
         <div>
-            <button title="Definições">⚙️</button>
+            <button title="Notificações" onclick="location.href='notificacoes.php'">
+            🔔  <?= $notificacao_count > 0 ? "($notificacao_count)" : "" ?>
+            </button>
             <div class="user-menu">
                 <button title="Conta">👤</button>
                 <div class="user-dropdown">
@@ -112,8 +147,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["images"])) {
     </header>
     <div class="main">
         <div class="sidebar">
-            <button onclick="location.href='albuns.php'">🖼️</button>
-        </div>
+        <button onclick="location.href='albuns.php'">🖼️</button>
+        <button onclick="location.href='likes.php'">👍</button>
+    </div>
         <div class="center-content">
             <button onclick="location.href='album.php?id=<?= $albumId ?>'" style="margin-bottom: 15px;">← Voltar ao Álbum</button>
             <h2>Adicionar Fotos ao Álbum "<?=htmlspecialchars($album_name)?>"</h2>
