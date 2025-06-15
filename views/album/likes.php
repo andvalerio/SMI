@@ -50,43 +50,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Fotos Gostadas - Photo Gallery</title>
-    <link rel="stylesheet" href="../../assets/styles/homepage.css">
-    <style>
-        .photo-card {
-            width: 220px;
-            margin-left: 60px;
-            margin-right: 60px;
-            margin-bottom: 190px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .photo-card img {
-            width: 220px;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .photo-stats {
-            width: 220px;
-            font-size: 14px;
-            color: #555;
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 8px;
-            box-sizing: border-box;
-        }
-
-        .photos {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-    </style>
-
+    <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
 <body>
 <header>

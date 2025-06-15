@@ -147,7 +147,7 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <title>Editar Álbum <?=htmlspecialchars($title)?></title>
-    <link rel="stylesheet" href="../../assets/styles/account.css">
+    <link rel="stylesheet" href="../../assets/styles/main.css">
     <script>
         function confirmDelete() {
             if (confirm('Tem a certeza que deseja apagar este álbum? Esta ação não pode ser desfeita.')) {

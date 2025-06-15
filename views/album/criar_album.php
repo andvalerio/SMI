@@ -71,24 +71,7 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <title>Criar Álbum</title>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-    </style>
+    <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
 
 <body>

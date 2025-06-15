@@ -79,49 +79,34 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <title>Remover Fotos</title>
-    <link rel="stylesheet" href="../../assets/styles/homepage.css">
-    <style>
-        .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-        .photo-item { position: relative; }
-        .photo-item input[type="checkbox"] { position: absolute; top: 5px; left: 5px; transform: scale(1.5); z-index: 2; }
-        .photo-item img { width: 100%; height: 150px; object-fit: cover; border-radius: 6px; }
-        form { margin-top: 20px; }
-        .actions { margin-top: 20px; display: flex; gap: 10px; align-items: center; }
-        .actions button, .actions a {
-            padding: 10px 15px;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            border-radius: 6px;
-        }
-        .danger { background-color: #ff4444; color: white; }
-        .secondary { background-color: #ccc; color: black; }
-    </style>
+    <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
 <body>
-    <div class="main" style="padding: 20px;">
-        <h2>Remover Fotos do Álbum</h2>
+    <div class="main">
+        <div class="center-content">
+            <h2>Remover Fotos do Álbum</h2>
 
-        <?php if (empty($photos)): ?>
-            <p>Este álbum não tem fotos.</p>
-        <?php else: ?>
-            <form method="POST" id="removeForm">
-                <div class="photo-grid">
-                    <?php foreach ($photos as $photo): ?>
-                        <div class="photo-item">
-                            <input type="checkbox" name="photo_ids[]" value="<?= $photo['id'] ?>">
-                            <img src="<?= htmlspecialchars($photo['filepath']) ?>" alt="Foto">
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+            <?php if (empty($photos)): ?>
+                <p>Este álbum não tem fotos.</p>
+            <?php else: ?>
+                <form method="POST" id="removeForm">
+                    <div class="remove-photo-grid">
+                        <?php foreach ($photos as $photo): ?>
+                            <div class="remove-photo-item">
+                                <input type="checkbox" name="photo_ids[]" value="<?= $photo['id'] ?>">
+                                <img src="<?= htmlspecialchars($photo['filepath']) ?>" alt="Foto">
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
 
-                <div class="actions">
-                    <button type="button" class="secondary" onclick="toggleSelectAll()">Selecionar Todos</button>
-                    <button type="submit" class="danger" onclick="return confirmDelete()">🗑️ Remover Selecionadas</button>
-                    <a href="../album/album.php?id=<?= $albumId ?>" class="secondary">Cancelar</a>
-                </div>
-            </form>
-        <?php endif; ?>
+                    <div class="button-group">
+                        <button type="button" class="secondary" onclick="toggleSelectAll()">Selecionar Todos</button>
+                        <button type="submit" class="danger" onclick="return confirmDelete()">🗑️ Remover Selecionadas</button>
+                        <a href="../album/album.php?id=<?= $albumId ?>" class="secondary">Cancelar</a>
+                    </div>
+                </form>
+            <?php endif; ?>
+        </div>
     </div>
 
     <script>

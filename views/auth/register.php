@@ -92,28 +92,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
   <meta charset="UTF-8">
   <title>Registo</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <!-- CSS personalizado -->
   <link rel="stylesheet" href="../../assets/styles/register.css">
 </head>
 
-<body>
-  <div class="container">
-    <div class="left-side">
-      Create your<br>account
+<body class="d-flex min-vh-100 align-items-stretch">
+  <div class="row flex-grow-1 w-100 g-0">
+    <!-- Imagem à esquerda -->
+    <div class="col-md-6 left-side d-flex justify-content-center align-items-center">
+      <div class="text-white fw-bold fs-1 text-center">Create your<br>account</div>
     </div>
-    <div class="right-side">
+
+    <!-- Formulário à direita -->
+    <div class="col-md-6 right-side d-flex align-items-center justify-content-center">
       <div class="register-box">
-        <h2>REGISTAR</h2>
-        <?php if (isset($msg)) echo "<p class='msg'><strong>$msg</strong></p>"; ?>
+        <h2 class="text-center mb-4">REGISTAR</h2>
+
+        <?php if (isset($msg)) echo "<div class='alert alert-danger text-center'><strong>$msg</strong></div>"; ?>
+
         <form action="" method="POST">
-          <input type="text" name="username" placeholder="Nome de utilizador" required>
-          <input type="text" name="full_name" placeholder="Nome completo" required>
-          <input type="email" name="email" placeholder="Email" required>
-          <input type="password" name="password" placeholder="Password" required>
-          <div class="g-recaptcha" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div>
-          <input type="submit" value="Criar Conta">
+          <input type="text" name="username" class="form-control" placeholder="Nome de utilizador" required>
+          <input type="text" name="full_name" class="form-control" placeholder="Nome completo" required>
+          <input type="email" name="email" class="form-control" placeholder="Email" required>
+          <input type="password" name="password" class="form-control" placeholder="Password" required>
+          <div class="g-recaptcha mb-3" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div>
+          <button type="submit" class="btn btn-register">Criar Conta</button>
         </form>
-        <div class="login-link">
+
+        <div class="text-center mt-3">
           Já tens conta? <a href="login.php">Faz login</a>
         </div>
       </div>

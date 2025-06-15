@@ -113,21 +113,7 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <title>Adicionar Fotos <?=htmlspecialchars($album_name)?></title>
-    <link rel="stylesheet" href="../../assets/styles/account.css">
-    <style>
-        .drop-area {
-            border: 2px dashed #ccc;
-            padding: 20px;
-            text-align: center;
-            margin: 20px auto;
-            width: 80%;
-        }
-        .drop-area.dragover {
-            background-color: #f0f8ff;
-        }
-        .message { color: green; }
-        .error { color: red; }
-    </style>
+    <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
 <body>
     <header>
@@ -151,18 +137,20 @@ if (isLoggedIn()) {
         <button onclick="location.href='likes.php'">👍</button>
     </div>
         <div class="center-content">
-            <button onclick="location.href='album.php?id=<?= $albumId ?>'" style="margin-bottom: 15px;">← Voltar ao Álbum</button>
-            <h2>Adicionar Fotos ao Álbum "<?=htmlspecialchars($album_name)?>"</h2>
-            <?php if ($msg) echo "<div class='message'>$msg</div>"; ?>
-            <form method="post" enctype="multipart/form-data">
-                <div class="drop-area" id="drop-area">
-                    Arraste as imagens aqui ou clique para selecionar
-                    <input type="file" name="images[]" multiple accept="image/*" style="display:none;" id="fileElem">
-                </div>
-                <div id="preview-container" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
-                <br>
-                <input type="submit" value="Enviar">
-            </form>
+            <div class="form-container">
+                <button style="margin-bottom: 15px;" onclick="location.href='album.php?id=<?= $albumId ?>'">← Voltar ao Álbum</button>
+                <h2>Adicionar Fotos ao Álbum "<?=htmlspecialchars($album_name)?>"</h2>
+                <?php if ($msg) echo "<div class='message'>$msg</div>"; ?>
+                <form method="post" enctype="multipart/form-data">
+                    <div class="drop-area" id="drop-area">
+                        Arraste as imagens aqui ou clique para selecionar
+                        <input type="file" name="images[]" multiple accept="image/*" style="display:none;" id="fileElem">
+                    </div>
+                    <div id="preview-container" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
+                    <br>
+                    <input type="submit" value="Enviar">
+                </form>
+            </div>
         </div>
     </div>
     <script>

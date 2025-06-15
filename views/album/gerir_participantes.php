@@ -65,21 +65,7 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <title>Gerir Participantes</title>
-    <link rel="stylesheet" href="../../assets/styles/homepage.css">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-        th {
-            background-color: #eee;
-        }
-    </style>
+    <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
 <body>
 <header>

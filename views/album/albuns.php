@@ -48,7 +48,7 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <title>Meus Álbuns</title>
-    <link rel="stylesheet" href="../../assets/styles/homepage.css">
+    <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
 <body>
 <header>

@@ -26,7 +26,7 @@ $conn->close();
 <html>
 <head>
     <title>Notificações</title>
-    <link rel="stylesheet" href="../../assets/styles/homepage.css">
+    <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
 <body>
 <header>

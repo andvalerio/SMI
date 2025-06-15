@@ -116,7 +116,7 @@ if (isLoggedIn()) {
 <head>
     <meta charset="UTF-8">
     <title>Visualizar Foto</title>
-    <link rel="stylesheet" href="../../assets/styles/homepage.css">
+    <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
 <body>
     <div style="padding: 20px;">
