@@ -16,10 +16,10 @@ $filepath = $_GET['path'];
 $conn = db_connect();
 
 // Obter info da foto
-$stmt = $conn->prepare("SELECT id, album_id FROM photo WHERE filepath = ?");
+$stmt = $conn->prepare("SELECT id, filename, album_id FROM photo WHERE filepath = ?");
 $stmt->bind_param("s", $filepath);
 $stmt->execute();
-$stmt->bind_result($photoId, $albumId);
+$stmt->bind_result($photoId, $filename, $albumId);
 if (!$stmt->fetch()) {
     echo "Foto não encontrada.";
     exit;
@@ -120,10 +120,22 @@ $conn->close();
         </a>
 
         <div class="text-center">
-            <img src="<?= htmlspecialchars($filepath) ?>"
-                class="img-fluid border rounded shadow-lg"
-                style="max-height: 50vh; object-fit: contain;">
-
+            <?php
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            $is_video = in_array($ext, ['mp4', 'mov']);
+            if ($is_video): ?>
+                <video autoplay controls
+                    style="height: 400px; object-fit: cover; border-radius: 8px;">
+                    <source src="<?= htmlspecialchars($filepath) ?>" type="video/mp4">
+                </video>
+            <?php else: ?>
+                <img src="<?= htmlspecialchars($filepath); ?>" alt="<?= htmlspecialchars($filename); ?>"
+                    class="img-fluid border rounded shadow-lg"
+                    style="max-height: 50vh; object-fit: contain;">
+            <?php endif; ?>
+            <!--        
+                
+-->
             <?php if ($userCanInteract): ?>
                 <div class="mt-2 d-flex justify-content-center gap-2 mb-3">
                     <form action="../../controllers/like_foto.php" method="post" class="mb-2">

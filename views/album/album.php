@@ -60,7 +60,7 @@ $_SESSION['album_title'] = $title; // Guardar o título do álbum na sessão
 // Obter fotos do album
 $photos_stmt = $conn->prepare("
     SELECT 
-        p.id, p.filepath,
+        p.id, p.filepath, p.filename,
         u.username,
         (SELECT COUNT(*) FROM photo_likes WHERE photo_id = p.id) AS likes,
         (SELECT COUNT(*) FROM photo_comments WHERE photo_id = p.id) AS comments,
@@ -168,7 +168,17 @@ $conn->close();
                 <?php foreach ($photos as $photo): ?>
                     <div class="photo-card">
                         <a href="ver_foto.php?path=<?= urlencode($photo['filepath']) ?>">
-                            <img src="<?= htmlspecialchars($photo['filepath']) ?>">
+                            <?php
+                            $ext = strtolower(pathinfo($photo['filename'], PATHINFO_EXTENSION));
+                            $is_video = in_array($ext, ['mp4', 'mov']);
+                            if ($is_video): ?>
+                                <video autoplay muted loop playsinline
+                                    style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                                    <source src="<?= htmlspecialchars($photo['filepath']) ?>" type="video/mp4">
+                                </video>
+                            <?php else: ?>
+                                <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
+                            <?php endif; ?>
                         </a>
                         <div class="mt-2 text-muted small">
                             <i class="bi bi-person"></i> <?= htmlspecialchars($photo['username'] ?? 'Desconhecido') ?>

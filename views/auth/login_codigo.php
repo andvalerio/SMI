@@ -26,9 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="d-flex min-vh-100 align-items-stretch">
     <div class="row flex-grow-1 w-100 g-0">
-
-        <!-- Lado esquerdo (imagem ou fundo com texto) -->
-        <!-- Lado esquerdo com imagem de fundo e texto -->
         <div class="col-md-6 d-none d-md-flex justify-content-center align-items-center text-white"
             style="background-image: url('../../assets/styles/imgs/login.jpg'); background-size: cover; background-position: center;">
             <h1 class="text-center px-4 fw-bold">Só queres ver<br>o álbum?</h1>

@@ -64,7 +64,7 @@ $conn->close();
 <body>
     <?php include_once '../../includes/header.php'; ?>
 
-    <main class="container py-5">
+    <main class="container py-4">
         <h2 class="mb-4 text-center">Gerir Participantes</h2>
 
         <div class="table-responsive">

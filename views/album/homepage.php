@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once '../../includes/session.php';
 require_once '../../includes/db.php';
 
@@ -53,23 +49,33 @@ $conn->close();
 
 <body>
     <?php include_once '../../includes/header.php'; ?>
-    
+
     <main class="flex-grow-1 p-4">
         <h2 class="text-primary mb-4">Fotos Recentes</h2>
         <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center">
             <?php foreach ($photos as $photo): ?>
                 <div class="photo-card">
                     <a href="album.php?id=<?= urlencode($photo['album_id'] ?? '') ?>">
-                        <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
+                        <?php
+                        $ext = strtolower(pathinfo($photo['filename'], PATHINFO_EXTENSION));
+                        $is_video = in_array($ext, ['mp4', 'mov']);
+                        if ($is_video): ?>
+                            <video autoplay muted loop playsinline
+                                style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                                <source src="<?= htmlspecialchars($photo['filepath']) ?>" type="video/mp4">
+                            </video>
+                        <?php else: ?>
+                            <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
+                        <?php endif; ?>
                     </a>
                     <div class="mt-2 text-muted small">
                         Álbum: <?= htmlspecialchars($photo['title']) ?>
                     </div>
                 </div>
             <?php endforeach; ?>
+
         </div>
     </main>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
