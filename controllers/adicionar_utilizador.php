@@ -20,7 +20,7 @@ $role = $_POST['role'];
 $albumTitle = $_SESSION['album_title'] ?? 'Álbum';
 
 // Verifica se o utilizador atual é administrador do álbum
-if (!hasAlbumRole($albumId, 'Administrador')) {
+if (!hasAlbumRole($albumId, 'Administrador') && !hasAlbumRole($albumId, 'Moderador')) {
     die("Sem permissões.");
 }
 
