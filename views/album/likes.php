@@ -62,8 +62,17 @@ $conn->close();
                     <?php foreach ($photos as $photo): ?>
                         <div class="photo-card">
                             <a href="album.php?id=<?= urlencode($photo['album_id'] ?? '') ?>">
-                                <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
-                            </a>
+                                <?php
+                                $ext = strtolower(pathinfo($photo['filename'], PATHINFO_EXTENSION));
+                                $is_video = in_array($ext, ['mp4', 'mov']);
+                                if ($is_video): ?>
+                                    <video autoplay muted loop playsinline
+                                        style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                                        <source src="<?= htmlspecialchars($photo['filepath']) ?>" type="video/mp4">
+                                    </video>
+                                <?php else: ?>
+                                    <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
+                                <?php endif; ?> </a>
                             <div class="mt-2 text-muted small">
                                 Álbum: <?= htmlspecialchars($photo['title']) ?>
                             </div>
