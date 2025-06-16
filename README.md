@@ -1,4 +1,4 @@
-Este é um projeto desenvolvido no âmbito da unidade curricular de Sistemas Multimédia para a Internet, onde se utiliza PHP e uma estrutura inspirada em MVC.
+Este é um projeto desenvolvido no âmbito da unidade curricular de Sistemas Multimédia para a Internet, onde se utiliza PHP com uma estrutura inspirada em MVC.
 A aplicação permite o registo de utilizadores, criação e gestão de álbuns, partilha de fotos e vídeos, comentários, likes e notificações.
 
 ---------------
