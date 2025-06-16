@@ -1,11 +1,7 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-
 require_once '../../includes/db.php';
 require_once '../../includes/session.php';
-require_once '../../controllers/AuthController.php';
+require_once '../../controllers/controlador_auth.php';
 
 
 $error = null;
@@ -13,28 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $code = trim($_POST['access_code']);
     $conn = db_connect();
     $error = enterViaCodigo($conn, $code);
-    /*
-    $stmt = $conn->prepare("SELECT id FROM album WHERE access_code = ?");
-    $stmt->bind_param("s", $code);
-    $stmt->execute();
-    $stmt->bind_result($albumId);
-
-    if ($stmt->fetch()) {
-        $_SESSION['guest_album'] = $albumId;
-        header("Location: ../album/album.php?id=$albumId");
-        exit();
-    } else {
-        $error = "Código inválido.";
-    }
-    $stmt->close();
-    */
-
     $conn->close();
 }
 ?>
-<?php
-// Supondo que $error esteja definido antes do HTML (p. ex. $error = "Código inválido";)
-?>
+
 <!DOCTYPE html>
 <html lang="pt">
 

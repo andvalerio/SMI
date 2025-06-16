@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once '../../includes/session.php';
 require_once '../../includes/db.php';
 require_once '../../includes/auth.php';
@@ -62,80 +58,105 @@ if (isLoggedIn()) {
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Gerir Participantes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
+
 <body>
-<header>
-    <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
-    <div>
-        <button title="Notificações" onclick="location.href='notificacoes.php'">
-            🔔<?= $notificacao_count > 0 ? "($notificacao_count)" : "" ?>
-        </button>
-        <div class="user-menu">
-            <button title="Conta">👤</button>
-            <div class="user-dropdown">
-                <a href="../auth/account.php">Alterar dados da conta</a>
-                <a href="../logout.php">Terminar sessão</a>
+
+    <header class="d-flex justify-content-between align-items-center px-4 py-2 border-bottom shadow-sm">
+        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-light position-relative" onclick="location.href='notificacoes.php'">
+                <i class="bi bi-bell"></i>
+                <?php if ($notificacao_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $notificacao_count ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
+                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
+                </ul>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<div class="main">
-    <div class="sidebar">
-        <button onclick="location.href='albuns.php'">🖼️</button>
-        <button onclick="location.href='likes.php'">👍</button>
-    </div>
+    <main class="container py-5">
+        <h2 class="mb-4 text-center">Gerir Participantes</h2>
 
-    <div class="content">
-        <h2>Gerir Participantes</h2>
-        <table>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Permissão</th>
-                <th>Ações</th>
-            </tr>
-            <?php foreach ($participants as $user): ?>
-                <tr>
-                    <td><?= htmlspecialchars($user['username']) ?></td>
-                    <td><?= htmlspecialchars($user['email']) ?></td>
-                    <td>
-                        <?php if ($isAdmin): ?>
-                            <form method="POST" action="../../controllers/alterar_role.php" style="display: inline-block;">
-                                <input type="hidden" name="album_id" value="<?= $albumId ?>">
-                                <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
-                                <select name="new_role" onchange="this.form.submit()">
-                                    <option value="Utilizador" <?= $user['role'] === 'Utilizador' ? 'selected' : '' ?>>Utilizador</option>
-                                    <option value="Moderador" <?= $user['role'] === 'Moderador' ? 'selected' : '' ?>>Moderador</option>
-                                    <option value="Administrador" <?= $user['role'] === 'Administrador' ? 'selected' : '' ?>>Administrador</option>
-                                </select>
-                            </form>
-                        <?php else: ?>
-                            <?= htmlspecialchars($user['role']) ?>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if ($isAdmin && $user['user_id'] != $userId): ?>
-                            <form method="POST" action="../../controllers/remover_participante.php" onsubmit="return confirm('Tem a certeza que quer remover este participante?');">
-                                <input type="hidden" name="album_id" value="<?= $albumId ?>">
-                                <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
-                                <button type="submit">Remover</button>
-                            </form>
-                        <?php else: ?>
-                            -
-                        <?php endif; ?>
-                    </td>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Permissão</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($participants as $user): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($user['username']) ?></td>
+                            <td><?= htmlspecialchars($user['email']) ?></td>
+                            <td>
+                                <?php if ($isAdmin): ?>
+                                    <form method="POST" action="../../controllers/alterar_role.php">
+                                        <input type="hidden" name="album_id" value="<?= $albumId ?>">
+                                        <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
+                                        <select name="new_role" class="form-select form-select-sm" onchange="this.form.submit()">
+                                            <option value="Utilizador" <?= $user['role'] === 'Utilizador' ? 'selected' : '' ?>>Utilizador</option>
+                                            <option value="Moderador" <?= $user['role'] === 'Moderador' ? 'selected' : '' ?>>Moderador</option>
+                                            <option value="Administrador" <?= $user['role'] === 'Administrador' ? 'selected' : '' ?>>Administrador</option>
+                                        </select>
+                                    </form>
+                                <?php else: ?>
+                                    <?= htmlspecialchars($user['role']) ?>
+                                <?php endif; ?>
+                            </td>
+                            <td class="text-center">
+                                <?php if ($isAdmin && $user['user_id'] != $userId): ?>
+                                    <form method="POST" action="../../controllers/remover_participante.php"
+                                        onsubmit="return confirm('Tem a certeza que quer remover este participante?');" class="d-inline">
+                                        <input type="hidden" name="album_id" value="<?= $albumId ?>">
+                                        <input type="hidden" name="user_id" value="<?= $user['user_id'] ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i> Remover
+                                        </button>
+                                    </form>
+                                <?php else: ?>
+                                    <span class="text-muted">—</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
 
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    </div>
+            <div class="text-end">
+                <a class="btn btn-link mt-2" href="album.php?id=<?= $albumId ?>">Voltar atrás</a>
+            </div>
+        </div>
+    </main>
 
-    <div class="rightbar"></div>
-</div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

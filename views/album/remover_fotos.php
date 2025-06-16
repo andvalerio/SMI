@@ -76,41 +76,79 @@ if (isLoggedIn()) {
 
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Remover Fotos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- Custom CSS (opcional) -->
     <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
+
 <body>
-    <div class="main">
-        <div class="center-content">
-            <h2>Remover Fotos do Álbum</h2>
-
-            <?php if (empty($photos)): ?>
-                <p>Este álbum não tem fotos.</p>
-            <?php else: ?>
-                <form method="POST" id="removeForm">
-                    <div class="remove-photo-grid">
-                        <?php foreach ($photos as $photo): ?>
-                            <div class="remove-photo-item">
-                                <input type="checkbox" name="photo_ids[]" value="<?= $photo['id'] ?>">
-                                <img src="<?= htmlspecialchars($photo['filepath']) ?>" alt="Foto">
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="button" class="secondary" onclick="toggleSelectAll()">Selecionar Todos</button>
-                        <button type="submit" class="danger" onclick="return confirmDelete()">🗑️ Remover Selecionadas</button>
-                        <a href="../album/album.php?id=<?= $albumId ?>" class="secondary">Cancelar</a>
-                    </div>
-                </form>
-            <?php endif; ?>
+    <header class="d-flex justify-content-between align-items-center px-4 py-2 border-bottom shadow-sm">
+        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-light position-relative" onclick="location.href='notificacoes.php'">
+                <i class="bi bi-bell"></i>
+                <?php if ($notificacao_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $notificacao_count ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"><i class="bi bi-person-circle"></i></button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
+                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
+    </header>
+
+    <main class="container py-4">
+        <h2 class="mb-4 text-center">Remover Fotos do Álbum</h2>
+
+        <?php if (empty($photos)): ?>
+            <p class="text-center">Este álbum não tem fotos.</p>
+        <?php else: ?>
+            <form method="POST" id="removeForm">
+                <div class="row g-3">
+                    <?php foreach ($photos as $photo): ?>
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2 text-center">
+                            <div class="border rounded p-2 h-100">
+                                <img src="<?= htmlspecialchars($photo['filepath']) ?>" alt="Foto"
+                                    style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                                <input type="checkbox" name="photo_ids[]" value="<?= $photo['id'] ?>" class="form-check-input mt-2">
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <div class="text-center mt-4 d-flex justify-content-center gap-3 flex-wrap">
+                    <button type="button" class="btn btn-outline-secondary" onclick="toggleSelectAll()">
+                        <i class="bi bi-check2-square"></i> Selecionar Todos
+                    </button>
+                    <button type="submit" class="btn btn-danger" onclick="return confirmDelete()">
+                        <i class="bi bi-trash3"></i> Remover Selecionadas
+                    </button>
+                    <a href="../album/album.php?id=<?= $albumId ?>" class="btn btn-outline-dark">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                    </a>
+                </div>
+            </form>
+        <?php endif; ?>
+    </main>
 
     <script>
         let allSelected = false;
+
         function toggleSelectAll() {
             const checkboxes = document.querySelectorAll('input[name="photo_ids[]"]');
             allSelected = !allSelected;
@@ -126,5 +164,8 @@ if (isLoggedIn()) {
             return confirm("Tem a certeza que deseja remover as fotos selecionadas? Esta ação não pode ser desfeita.");
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>

@@ -1,7 +1,7 @@
 <?php
 require_once '../../includes/db.php';
 require_once '../../includes/session.php';
-require_once '../../controllers/AuthController.php';
+require_once '../../controllers/controlador_auth.php';
 
 $msg = null;
 
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <!-- reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-  <!-- CSS personalizado -->
+  <!-- CSS -->
   <link rel="stylesheet" href="../../assets/styles/login.css">
 
 </head>

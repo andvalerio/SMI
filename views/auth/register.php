@@ -1,9 +1,6 @@
 <?php
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
 require_once '../../libs/vendor/autoload.php';
-require_once '../../controllers/AuthController.php';
+require_once '../../controllers/controlador_auth.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn = db_connect();
@@ -24,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <!-- reCAPTCHA -->
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-  <!-- CSS personalizado -->
+  <!-- CSS -->
   <link rel="stylesheet" href="../../assets/styles/register.css">
 </head>
 

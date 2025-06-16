@@ -42,60 +42,87 @@ if (isLoggedIn()) {
     $conn->close();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
-    <title>Meus Álbuns</title>
+    <title>Os Meus Álbuns</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
+
 <body>
-<header>
-    <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
-    <div>
-        <button title="Notificações" onclick="location.href='notificacoes.php'">
-            🔔<?= $notificacao_count > 0 ? "($notificacao_count)" : "" ?>
-        </button>
-        <div class="user-menu">
-            <button title="Conta">👤</button>
-            <div class="user-dropdown">
-                <a href="../auth/account.php">Alterar dados da conta</a>
-                <a href="../logout.php">Terminar sessão</a>
+    <header class="d-flex justify-content-between align-items-center px-4">
+        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- Botões pa ver albuns -->
+            <button class="btn btn-light btn-sm" onclick="location.href='albuns.php'" title="Álbuns">
+                <i class="bi bi-images"></i>
+            </button>
+            <!-- Botões pa ver likes -->
+            <button class="btn btn-light btn-sm" onclick="location.href='likes.php'" title="Likes">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+
+            <!-- Botão de notificações -->
+            <button class="btn btn-light btn-sm position-relative" onclick="location.href='notificacoes.php'" title="Notificações">
+                <i class="bi bi-bell-fill"></i>
+                <?php if ($notificacao_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $notificacao_count ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+
+            <!-- Dropdown de utilizador -->
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Conta">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
+                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
+                </ul>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<div class="main">
-    <div class="sidebar">
-        <button style="background-color: #ddd;" onclick="location.href='albuns.php'">🖼️</button>
-        <button onclick="location.href='likes.php'">👍</button>
-    </div>
-
-    <div class="content">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2>Os teus álbuns</h2>
-            <button onclick="location.href='criar_album.php'" style="padding: 8px 12px;">➕ Criar Álbum</button>
+    <main class="flex-grow-1 p-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="text-primary mb-4">Os teus álbuns</h2>
+            <a href="criar_album.php" class="btn btn-success btn-sm">
+                <i class="bi bi-plus-circle me-1"></i> Criar Álbum
+            </a>
         </div>
 
-        <div class="albums-grid">
+        <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center">
             <?php if (empty($albums)): ?>
-                <p>Não tens álbuns associados.</p>
+                <p class="text-muted">Não tens álbuns associados.</p>
             <?php else: ?>
-                <?php foreach ($albums as $album): ?>
-                    <div class="album-card">
-                        <a href="album.php?id=<?= $album['id'] ?>">
-                            <img src="<?= htmlspecialchars($album['cover'] ?? '../../assets/styles/imgs/placeholder.png') ?>" alt="Capa do álbum">
-                            <p><?= htmlspecialchars($album['title']) ?></p>
-                        </a>
-                    </div>
-                <?php endforeach; ?>
+                <div class="d-flex flex-wrap gap-3">
+                    <?php foreach ($albums as $album): ?>
+                        <div class="album-card">
+                            <a href="album.php?id=<?= $album['id'] ?>">
+                                <img src="<?= htmlspecialchars($album['cover'] ?? '../../assets/styles/imgs/placeholder.png') ?>" alt="Capa do álbum">
+                                <p class="mt-2 mb-0"><?= htmlspecialchars($album['title']) ?></p>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             <?php endif; ?>
         </div>
-    </div>
+    </main>
 
-    <div class="rightbar"></div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

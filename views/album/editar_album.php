@@ -41,7 +41,6 @@ if ($role !== 'Administrador') {
     exit();
 }
 
-// Guarda a role na sessão para consistência com outros ficheiros
 if (!isset($_SESSION['album_roles'])) {
     $_SESSION['album_roles'] = [];
 }
@@ -49,10 +48,8 @@ $_SESSION['album_roles'][$albumId] = $role;
 
 $msg = "";
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_album'])) {
-        // Primeiro apagar as fotos da base e ficheiros (se necessário)
         $stmt = $conn->prepare("SELECT filepath FROM photo WHERE album_id = ?");
         $stmt->bind_param("i", $albumId);
         $stmt->execute();
@@ -60,24 +57,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         while ($row = $result->fetch_assoc()) {
             if (file_exists($row['filepath'])) {
-                unlink($row['filepath']); // Apaga o ficheiro físico
+                unlink($row['filepath']);
             }
         }
         $stmt->close();
 
-        // Apagar diretoria do álbum (recursivamente)
         $albumDir = $CONTENT_FOLDER . $albumId;
-        function rrmdir($dir) {
+        function rrmdir($dir)
+        {
             if (is_dir($dir)) {
                 $objects = scandir($dir);
                 foreach ($objects as $object) {
                     if ($object != "." && $object != "..") {
                         $path = $dir . DIRECTORY_SEPARATOR . $object;
-                        if (is_dir($path)) {
-                            rrmdir($path);
-                        } else {
-                            unlink($path);
-                        }
+                        is_dir($path) ? rrmdir($path) : unlink($path);
                     }
                 }
                 rmdir($dir);
@@ -85,19 +78,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         rrmdir($albumDir);
 
-        // Apagar fotos da DB
         $stmt = $conn->prepare("DELETE FROM photo WHERE album_id = ?");
         $stmt->bind_param("i", $albumId);
         $stmt->execute();
         $stmt->close();
 
-        // Apagar associações user_album
         $stmt = $conn->prepare("DELETE FROM user_album WHERE album_id = ?");
         $stmt->bind_param("i", $albumId);
         $stmt->execute();
         $stmt->close();
 
-        // Apagar álbum
         $stmt = $conn->prepare("DELETE FROM album WHERE id = ?");
         $stmt->bind_param("i", $albumId);
         $stmt->execute();
@@ -108,7 +98,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Atualizar álbum
     if (isset($_POST['update_album'])) {
         $new_title = trim($_POST['title']);
         $new_desc = trim($_POST['description']);
@@ -144,10 +133,84 @@ if (isLoggedIn()) {
 
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
-    <title>Editar Álbum <?=htmlspecialchars($title)?></title>
+    <title>Editar Álbum <?= htmlspecialchars($title) ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../assets/styles/main.css">
+</head>
+
+<body>
+    <header class="d-flex justify-content-between align-items-center px-4">
+        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- Botões pa ver albuns -->
+            <button class="btn btn-light btn-sm" onclick="location.href='albuns.php'" title="Álbuns">
+                <i class="bi bi-images"></i>
+            </button>
+            <!-- Botões pa ver likes -->
+            <button class="btn btn-light btn-sm" onclick="location.href='likes.php'" title="Likes">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+
+            <!-- Botão de notificações -->
+            <button class="btn btn-light btn-sm position-relative" onclick="location.href='notificacoes.php'" title="Notificações">
+                <i class="bi bi-bell-fill"></i>
+                <?php if ($notificacao_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $notificacao_count ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+
+            <!-- Dropdown de utilizador -->
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Conta">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
+                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm p-4">
+                    <h2 class="mb-4">Editar Álbum</h2>
+
+                    <?php if (!empty($msg)): ?>
+                        <div class="alert alert-info"> <?= htmlspecialchars($msg) ?> </div>
+                    <?php endif; ?>
+
+                    <form method="post" class="mb-4">
+                        <input type="hidden" name="update_album" value="1">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Título</label>
+                            <input type="text" class="form-control" id="title" name="title" value="<?= htmlspecialchars($title) ?>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="description" name="description" rows="4"><?= htmlspecialchars($description) ?></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+                    </form>
+
+                    <form method="post" id="deleteForm">
+                        <input type="hidden" name="delete_album" value="1">
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">Apagar Álbum</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
     <script>
         function confirmDelete() {
             if (confirm('Tem a certeza que deseja apagar este álbum? Esta ação não pode ser desfeita.')) {
@@ -155,53 +218,7 @@ if (isLoggedIn()) {
             }
         }
     </script>
-</head>
-<body>
-<header>
-    <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
-    <div>
-        <button title="Notificações" onclick="location.href='notificacoes.php'">
-            🔔<?= $notificacao_count > 0 ? "($notificacao_count)" : "" ?>
-        </button>
-        <div class="user-menu">
-            <button title="Conta">👤</button>
-            <div class="user-dropdown">
-                <a href="../auth/account.php">Alterar dados da conta</a>
-                <a href="../logout.php">Terminar sessão</a>
-            </div>
-        </div>
-    </div>
-</header>
-<div class="main">
-    <div class="sidebar">
-        <button onclick="location.href='albuns.php'">🖼️</button>
-        <button onclick="location.href='likes.php'">👍</button>
-    </div>
-    <div class="center-content">
-        <div class="form-container">
-            <h2>Editar Álbum</h2>
-            <?php if (!empty($msg)) echo "<p class='message'>" . htmlspecialchars($msg) . "</p>"; ?>
-            <form method="post">
-                <input type="hidden" name="update_album" value="1">
-                <label for="title">Título</label>
-                <input type="text" id="title" name="title" value="<?= htmlspecialchars($title) ?>" required>
-
-                <label for="description">Descrição</label>
-                <textarea id="description" name="description" rows="4"><?= htmlspecialchars($description) ?></textarea>
-
-                <input type="submit" value="Guardar Alterações">
-            </form>
-
-            <hr>
-
-            <form method="post" id="deleteForm">
-                <input type="hidden" name="delete_album" value="1">
-                <button type="button" onclick="confirmDelete()" style="background-color:#c0392b; color:white; padding:10px; border:none; cursor:pointer;">
-                    Apagar Álbum
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

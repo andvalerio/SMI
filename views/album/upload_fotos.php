@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once '../../includes/session.php';
 require_once '../../includes/db.php';
 require_once '../../includes/auth.php';
@@ -110,49 +106,78 @@ if (isLoggedIn()) {
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
-    <title>Adicionar Fotos <?=htmlspecialchars($album_name)?></title>
+    <title>Adicionar Fotos <?= htmlspecialchars($album_name) ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
+
 <body>
-    <header>
-        <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
-        <div>
-            <button title="Notificações" onclick="location.href='notificacoes.php'">
-            🔔  <?= $notificacao_count > 0 ? "($notificacao_count)" : "" ?>
+    <header class="d-flex justify-content-between align-items-center px-4">
+        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- Botões pa ver albuns -->
+            <button class="btn btn-light btn-sm" onclick="location.href='albuns.php'" title="Álbuns">
+                <i class="bi bi-images"></i>
             </button>
-            <div class="user-menu">
-                <button title="Conta">👤</button>
-                <div class="user-dropdown">
-                    <a href="../auth/account.php">Alterar dados da conta</a>
-                    <a href="../logout.php">Terminar sessão</a>
-                </div>
+            <!-- Botões pa ver likes -->
+            <button class="btn btn-light btn-sm" onclick="location.href='likes.php'" title="Likes">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+
+            <!-- Botão de notificações -->
+            <button class="btn btn-light btn-sm position-relative" onclick="location.href='notificacoes.php'" title="Notificações">
+                <i class="bi bi-bell-fill"></i>
+                <?php if ($notificacao_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $notificacao_count ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+
+            <!-- Dropdown de utilizador -->
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Conta">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
+                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
+                </ul>
             </div>
         </div>
     </header>
-    <div class="main">
-        <div class="sidebar">
-        <button onclick="location.href='albuns.php'">🖼️</button>
-        <button onclick="location.href='likes.php'">👍</button>
-    </div>
-        <div class="center-content">
-            <div class="form-container">
-                <button style="margin-bottom: 15px;" onclick="location.href='album.php?id=<?= $albumId ?>'">← Voltar ao Álbum</button>
-                <h2>Adicionar Fotos ao Álbum "<?=htmlspecialchars($album_name)?>"</h2>
-                <?php if ($msg) echo "<div class='message'>$msg</div>"; ?>
+
+    <main class="container py-5">
+        <div class="justify-content-center">
+            <div class="card shadow-sm p-4">
+                <h3 class="mb-4">Adicionar Fotos ao Álbum "<?= htmlspecialchars($album_name) ?>"</h3>
+
+                <?php if ($msg): ?>
+                    <div class="alert alert-info"> <?= $msg ?> </div>
+                <?php endif; ?>
+
                 <form method="post" enctype="multipart/form-data">
-                    <div class="drop-area" id="drop-area">
-                        Arraste as imagens aqui ou clique para selecionar
-                        <input type="file" name="images[]" multiple accept="image/*" style="display:none;" id="fileElem">
+                    <div id="drop-area" class="border border-secondary border-dashed rounded p-4 text-center" style="cursor:pointer">
+                        <p class="mb-0">Arraste as imagens aqui ou clique para selecionar</p>
+                        <input type="file" name="images[]" multiple accept="image/*" class="form-control d-none" id="fileElem">
                     </div>
-                    <div id="preview-container" style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
-                    <br>
-                    <input type="submit" value="Enviar">
+
+                    <div id="preview-container" class="d-flex flex-wrap gap-2 mt-3"></div>
+                    <button type="submit" class="btn btn-primary mt-4 mb-3 mx-auto d-block">Enviar</button>
                 </form>
+
+                <a class="btn btn-link mt-2" href="album.php?id=<?= $albumId ?>">Voltar atrás</a>
             </div>
         </div>
-    </div>
+    </main>
+
     <script>
         const dropArea = document.getElementById('drop-area');
         const fileInput = document.getElementById('fileElem');
@@ -199,5 +224,7 @@ if (isLoggedIn()) {
             });
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

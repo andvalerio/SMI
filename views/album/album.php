@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once '../../includes/session.php';
 require_once '../../includes/db.php';
 require_once '../../includes/auth.php';
@@ -17,7 +13,7 @@ $albumId = intval($_GET['id']);
 $conn = db_connect();
 
 if (isset($_SESSION['guest_album']) && $_SESSION['guest_album'] == $albumId && !$userId) {
-    // Visitante com código
+    // Convidado com código
     $title = $description = '';
     $stmt = $conn->prepare("SELECT title, description FROM album WHERE id = ?");
     $stmt->bind_param("i", $albumId);
@@ -118,72 +114,100 @@ if (isLoggedIn()) {
 ?>
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($title) ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
+
 <body>
-<header>
-    <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
-    <div>
-        <button title="Notificações" onclick="location.href='notificacoes.php'">
-            🔔<?= $notificacao_count > 0 ? "($notificacao_count)" : "" ?>
-        </button>
-        <div class="user-menu">
-            <button title="Conta">👤</button>
-            <div class="user-dropdown">
-                <a href="../auth/account.php">Alterar dados da conta</a>
-                <a href="../logout.php">Terminar sessão</a>
+    <header class="d-flex justify-content-between align-items-center px-4">
+        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- Botões pa ver albuns -->
+            <button class="btn btn-light btn-sm" onclick="location.href='albuns.php'" title="Álbuns">
+                <i class="bi bi-images"></i>
+            </button>
+            <!-- Botões pa ver likes -->
+            <button class="btn btn-light btn-sm" onclick="location.href='likes.php'" title="Likes">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+
+            <!-- Botão de notificações -->
+            <button class="btn btn-light btn-sm position-relative" onclick="location.href='notificacoes.php'" title="Notificações">
+                <i class="bi bi-bell-fill"></i>
+                <?php if ($notificacao_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $notificacao_count ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+
+            <!-- Dropdown de utilizador -->
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Conta">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
+                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
+                </ul>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<div class="main">
-    <div class="sidebar">
-        <button onclick="location.href='albuns.php'">🖼️</button>
-        <button onclick="location.href='likes.php'">👍</button>
-    </div>
-
-    <div class="content">
+    <main class="flex-grow-1 p-4">
         <?php if (!empty($successMessage)): ?>
-            <div style="background-color: #d4edda; color: #155724; padding: 10px 15px; border: 1px solid #c3e6cb; border-radius: 5px; margin-bottom: 20px;">
-                <?= htmlspecialchars($successMessage) ?>
-            </div>
+            <div class="alert alert-success"><?= htmlspecialchars($successMessage) ?></div>
         <?php endif; ?>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h2><?= htmlspecialchars($title) ?></h2>
-            <div style="display: flex; gap: 8px;">
-                <?php if ($can_upload): ?>
-                    <label for="accessCode" style="font-size: 14px;">Código do Álbum:</label>
-                    <input type="text" id="accessCode" value="<?= htmlspecialchars($accessCode) ?>" readonly style="width: 130px;">
-                    <button onclick="copyAccessCode()">📋 Copiar</button>
 
-                    <a href="upload_fotos.php?album_id=<?= $albumId ?>"><button>📤 Adicionar Fotos</button></a>
-                    <a href="gerir_participantes.php?album_id=<?= $albumId ?>"><button>👥 Membros</button></a>
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+            <h2 class="text-primary"><?= htmlspecialchars($title) ?></h2>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+
+                <?php if ($can_upload): ?>
+                    <span class="me-2">Código do Álbum:</span>
+                    <input type="text" id="accessCode" value="<?= htmlspecialchars($accessCode) ?>" class="form-control form-control-sm" style="width: 130px;" readonly>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="copyAccessCode()"><i class="bi bi-clipboard"></i></button>
+                    <a href="gerir_participantes.php?album_id=<?= $albumId ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-people"></i> Membros</a>
+                    <a href="upload_fotos.php?album_id=<?= $albumId ?>" class="btn btn-sm btn-success"><i class="bi bi-upload"></i> Adicionar Fotos</a>
                 <?php endif; ?>
+
                 <?php if ($can_add_user): ?>
-                    <button onclick="openAddUserModal()">➕ Adicionar Utilizador</button>
+                    <button class="btn btn-sm btn-warning" onclick="openAddUserModal()"><i class="bi bi-person-plus"></i> Adicionar Utilizador</button>
                 <?php endif; ?>
+
                 <?php if ($can_edit): ?>
-                    <a href="editar_album.php?album_id=<?= $albumId ?>"><button>✏️ Editar Álbum</button></a>
-                    <a href="remover_fotos.php?album_id=<?= $albumId ?>"><button>🗑️ Remover Fotos</button></a>
+                    <a href="editar_album.php?album_id=<?= $albumId ?>" class="btn btn-sm btn-warning"><i class="bi bi-pencil"></i> Editar Álbum</a>
+                    <a href="remover_fotos.php?album_id=<?= $albumId ?>" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Remover Fotos</a>
                 <?php endif; ?>
+
                 <?php if ($numParticipants > 1 && $can_upload): ?>
-                    <form method="POST" action="../../controllers/sair_album.php" onsubmit="return confirm('Tem a certeza que quer sair do álbum?');" style="display:inline;">
+                    <form method="POST" action="../../controllers/sair_album.php" onsubmit="return confirm('Tem a certeza que quer sair do álbum?');" class="d-inline">
                         <input type="hidden" name="album_id" value="<?= $albumId ?>">
-                        <button type="submit">🚪 Sair do Álbum</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-box-arrow-right"></i> Sair</button>
                     </form>
                 <?php endif; ?>
             </div>
         </div>
+
         <?php if ($description): ?>
-            <p><strong>Descrição:</strong></p>
-            <p><?= nl2br(htmlspecialchars($description)) ?></p>
+            <div class="mb-4">
+                <p><strong>Descrição:</strong> <?= nl2br(htmlspecialchars($description)) ?> </p>
+            </div>
         <?php endif; ?>
 
-        <div class="photos">
+        <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center">
             <?php if (empty($photos)): ?>
                 <p>Não há fotos neste álbum ainda.</p>
             <?php else: ?>
@@ -192,57 +216,62 @@ if (isLoggedIn()) {
                         <a href="ver_foto.php?path=<?= urlencode($photo['filepath']) ?>">
                             <img src="<?= htmlspecialchars($photo['filepath']) ?>">
                         </a>
-                        <div style="margin-top: 4px; font-size: 13px; color: #333;">
-                            👤 <?= htmlspecialchars($photo['username'] ?? 'Desconhecido') ?>
+                        <div class="mt-2 text-muted small">
+                            <i class="bi bi-person"></i> <?= htmlspecialchars($photo['username'] ?? 'Desconhecido') ?>
                         </div>
-                        <div class="photo-stats">
-                            ❤️ <?= $photo['likes'] ?>
-                            💬 <?= $photo['comments'] ?>
-                            ⬇️ <?= $photo['downloads'] ?>
+                        <div class="photo-stats small text-muted mt-1">
+                            <i class="bi bi-heart-fill"></i> <?= $photo['likes'] ?>
+                            <i class="bi bi-chat-dots"></i> <?= $photo['comments'] ?>
+                            <i class="bi bi-download"></i> <?= $photo['downloads'] ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
+    </main>
 
-    </div>
-    <div id="addUser" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
-        <div style="background:white; width:400px; margin:100px auto; padding:20px; border-radius:8px; position:relative;">
-            <h3>Adicionar Utilizador ao Álbum</h3>
+    <div id="addUser">
+        <div class="bg-white rounded shadow p-4" style="width: 400px; margin: 100px auto;">
+            <h5 class="mb-3">Adicionar Utilizador ao Álbum</h5>
             <form method="POST" action="../../controllers/adicionar_utilizador.php">
                 <input type="hidden" name="album_id" value="<?= $albumId ?>">
-                <label for="user_identifier">Username ou Email:</label>
-                <input type="text" id="user_identifier" name="user_identifier" required style="width:100%; margin-bottom:10px;">
-                <label for="role">Permissão:</label>
-                <select id="role" name="role" style="width:100%; margin-bottom:15px;">
-                    <option value="Utilizador">Utilizador</option>
-                    <option value="Moderador">Moderador</option>
-                </select>
-                <div style="display: flex; justify-content: space-between;">
-                    <button type="submit">Adicionar</button>
-                    <button type="button" onclick="closeAddUserModal()">Cancelar</button>
+                <div class="mb-3">
+                    <label for="user_identifier" class="form-label">Username ou Email</label>
+                    <input type="text" id="user_identifier" name="user_identifier" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="role" class="form-label">Permissão</label>
+                    <select id="role" name="role" class="form-select">
+                        <option value="Utilizador">Utilizador</option>
+                        <option value="Moderador">Moderador</option>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary" onclick="closeAddUserModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Adicionar</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <script>
+        function openAddUserModal() {
+            document.getElementById("addUser").style.display = "block";
+        }
 
-    <div class="rightbar"></div>
-</div>
-<script>
-    function openAddUserModal() {
-        document.getElementById("addUser").style.display = "block";
-    }
-    function closeAddUserModal() {
-        document.getElementById("addUser").style.display = "none";
-    }
-    function copyAccessCode() {
-        const input = document.getElementById("accessCode");
-        input.select();
-        document.execCommand("copy");
-        alert("Código copiado!");
-    }
-</script>
+        function closeAddUserModal() {
+            document.getElementById("addUser").style.display = "none";
+        }
+
+        function copyAccessCode() {
+            const input = document.getElementById("accessCode");
+            input.select();
+            document.execCommand("copy");
+            alert("Código copiado!");
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>

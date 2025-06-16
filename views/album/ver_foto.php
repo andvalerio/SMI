@@ -3,7 +3,6 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 require_once '../../includes/session.php';
 require_once '../../includes/db.php';
 require_once '../../includes/auth.php';
@@ -84,7 +83,6 @@ $commentCountStmt->bind_result($commentCount);
 $commentCountStmt->fetch();
 $commentCountStmt->close();
 
-
 // Obter comentários
 $comments_stmt = $conn->prepare("
     SELECT u.username, c.comment, c.created_at 
@@ -111,74 +109,150 @@ if (isLoggedIn()) {
     $conn->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Visualizar Foto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
+
 <body>
-    <div style="padding: 20px;">
-        <a href="album.php?id=<?= $albumId ?>">← Voltar ao Álbum</a>
-        <div style="margin-top: 20px;">
-            <img src="<?= htmlspecialchars($filepath) ?>" style="max-width: 100%; height: auto; border: 1px solid #ccc;">
-            <p><strong>Likes:</strong> <?= $likes ?></p>
-            <?php if (!empty($likedUsers)): ?>
-                <p>❤️ <em>Gostado por:</em> <?= implode(', ', array_map(fn($u) => htmlspecialchars($u['username']), $likedUsers)) ?></p>
-            <?php endif; ?>
-            <p><strong>Downloads:</strong> <?= $totalDownloads ?></p>
+    <header class="d-flex justify-content-between align-items-center px-4">
+        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- Botões pa ver albuns -->
+            <button class="btn btn-light btn-sm" onclick="location.href='albuns.php'" title="Álbuns">
+                <i class="bi bi-images"></i>
+            </button>
+            <!-- Botões pa ver likes -->
+            <button class="btn btn-light btn-sm" onclick="location.href='likes.php'" title="Likes">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+
+            <!-- Botão de notificações -->
+            <button class="btn btn-light btn-sm position-relative" onclick="location.href='notificacoes.php'" title="Notificações">
+                <i class="bi bi-bell-fill"></i>
+                <?php if ($notificacao_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $notificacao_count ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+
+            <!-- Dropdown de utilizador -->
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Conta">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
+                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow-1 p-4">
+        <a href="album.php?id=<?= $albumId ?>" class="btn btn-secondary mb-3">
+            <i class="bi bi-arrow-left"></i> Voltar ao Álbum
+        </a>
+
+        <div class="text-center">
+            <img src="<?= htmlspecialchars($filepath) ?>"
+                class="img-fluid border rounded shadow-lg"
+                style="max-height: 50vh; object-fit: contain;">
+
             <?php if ($userCanInteract): ?>
-                <form action="../../controllers/like_foto.php" method="post" style="margin-bottom: 10px;">
-                    <input type="hidden" name="photo_id" value="<?= $photoId ?>">
-                    <input type="hidden" name="path" value="<?= htmlspecialchars($filepath) ?>">
-                    <button type="submit">
-                        <?= $alreadyLiked ? '👎 Remover Like' : '👍 Dar Like' ?>
-                    </button>
-                </form>
-                <form action="../../controllers/comentar_foto.php" method="post">
-                    <input type="hidden" name="photo_id" value="<?= $photoId ?>">
-                    <input type="hidden" name="path" value="<?= htmlspecialchars($filepath) ?>">
-                    <textarea name="comment" rows="3" cols="50" required placeholder="Escreve um comentário..."></textarea><br>
-                    <button type="submit">💬 Comentar</button>
-                </form>
-                <form action="../../controllers/download_foto.php" method="post" style="margin-top: 10px;">
-                    <input type="hidden" name="photo_id" value="<?= $photoId ?>">
-                    <input type="hidden" name="path" value="<?= htmlspecialchars($filepath) ?>">
-                    <button type="submit">⬇️ Download da Imagem</button>
-                </form>
+                <div class="mt-2 d-flex justify-content-center gap-2 mb-3">
+                    <form action="../../controllers/like_foto.php" method="post" class="mb-2">
+                        <input type="hidden" name="photo_id" value="<?= $photoId ?>">
+                        <input type="hidden" name="path" value="<?= htmlspecialchars($filepath) ?>">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="bi <?= $alreadyLiked ? 'bi-hand-thumbs-down' : 'bi-hand-thumbs-up' ?>"></i>
+                            <?= $alreadyLiked ? 'Remover Like' : 'Dar Like' ?>
+                        </button>
+                    </form>
+
+                    <form action="../../controllers/download_foto.php" method="post">
+                        <input type="hidden" name="photo_id" value="<?= $photoId ?>">
+                        <input type="hidden" name="path" value="<?= htmlspecialchars($filepath) ?>">
+                        <button type="submit" class="btn btn-outline-dark">
+                            <i class="bi bi-download"></i> Download
+                        </button>
+                    </form>
+                </div>
+
             <?php else: ?>
-                <p><em>Apenas utilizadores registados podem interagir com esta foto.</em></p>
+                <p class="text-muted"><em>Apenas utilizadores registados podem interagir com esta foto.</em></p>
+            <?php endif; ?>
+        </div>
+
+        <div class="mt-4">
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 60px;">
+                <p>
+                    <?= $likes ?> <i class="bi bi-heart-fill text-danger"></i>
+                    <?php if (!empty($likedUsers)): ?>
+                        <em>Gostado por: <?= implode(', ', array_map(fn($u) => htmlspecialchars($u['username']), $likedUsers)) ?></em>
+                    <?php endif; ?>
+                </p>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+                <p><?= $totalDownloads ?> <strong>downloads</strong> efetuados.</p>
+            </div>
+
+            <h3 class="mt-2">Comentários (<?= $commentCount ?>):</h3>
+            <?php if ($userCanInteract): ?>
+                <form action="../../controllers/comentar_foto.php" method="post" class="mb-3">
+                    <input type="hidden" name="photo_id" value="<?= $photoId ?>">
+                    <input type="hidden" name="path" value="<?= htmlspecialchars($filepath) ?>">
+
+                    <div class="d-flex align-items-start gap-2">
+                        <button type="submit" class="btn btn-outline-success">
+                            <i class="bi bi-chat-left-text"></i>
+                        </button>
+                        <textarea name="comment" rows="1" class="form-control" required placeholder="Escreve um comentário..." style="resize: none;"></textarea>
+                    </div>
+                </form>
             <?php endif; ?>
 
-            <h3>Comentários (<?= $commentCount ?>):</h3>
             <?php if (empty($comments)): ?>
-                <p>Sem comentários ainda.</p>
+                <p class="text-muted">Sem comentários ainda.</p>
             <?php else: ?>
                 <?php foreach ($comments as $c): ?>
-                    <div style="border-bottom: 1px solid #ccc; margin-bottom: 10px;">
+                    <div class="border-bottom pb-2 mb-3">
                         <strong><?= htmlspecialchars($c['username']) ?></strong> disse:<br>
-                        <?= nl2br(htmlspecialchars($c['comment'])) ?><br>
-                        <small><?= $c['created_at'] ?></small>
+                        <p class="mb-1"><?= nl2br(htmlspecialchars($c['comment'])) ?></p>
+                        <small class="text-muted"><?= $c['created_at'] ?></small>
                         <?php $canDeleteComment = $userCanInteract && (
                             (isset($_SESSION['username']) && $_SESSION['username'] === $c['username']) ||
                             hasAlbumRole($albumId, 'Moderador') ||
                             hasAlbumRole($albumId, 'Administrador')
                         );
-                        if ($canDeleteComment):
-                        ?>
-                        <form action="../../controllers/apagar_comentario.php" method="post" style="display:inline;">
-                            <input type="hidden" name="photo_id" value="<?= $photoId ?>">
-                            <input type="hidden" name="comment_user" value="<?= htmlspecialchars($c['username']) ?>">
-                            <input type="hidden" name="created_at" value="<?= $c['created_at'] ?>">
-                            <input type="hidden" name="path" value="<?= htmlspecialchars($filepath) ?>">
-                            <button type="submit" style="color: red; border: none; background: none; cursor: pointer;">🗑️ Apagar</button>
-                        </form>
+                        if ($canDeleteComment): ?>
+                            <form action="../../controllers/apagar_comentario.php" method="post" class="d-inline ms-2">
+                                <input type="hidden" name="photo_id" value="<?= $photoId ?>">
+                                <input type="hidden" name="comment_user" value="<?= htmlspecialchars($c['username']) ?>">
+                                <input type="hidden" name="created_at" value="<?= $c['created_at'] ?>">
+                                <input type="hidden" name="path" value="<?= htmlspecialchars($filepath) ?>">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Apagar
+                                </button>
+                            </form>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-    </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

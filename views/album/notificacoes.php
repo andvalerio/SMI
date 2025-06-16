@@ -21,44 +21,82 @@ $notifications = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 $conn->close();
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="pt">
+
 <head>
+    <meta charset="UTF-8">
     <title>Notificações</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="../../assets/styles/main.css">
 </head>
+
 <body>
-<header>
-    <div><strong onclick="location.href='homepage.php'">Photo Gallery</strong></div>
-    <div>
-        <button onclick="location.href='notificacoes.php'">🔔</button>
-        <div class="user-menu">
-            <button>👤</button>
-            <div class="user-dropdown">
-                <a href="../auth/account.php">Alterar dados da conta</a>
-                <a href="../logout.php">Terminar sessão</a>
+    <header class="d-flex justify-content-between align-items-center px-4">
+        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- Botões pa ver albuns -->
+            <button class="btn btn-light btn-sm" onclick="location.href='albuns.php'" title="Álbuns">
+                <i class="bi bi-images"></i>
+            </button>
+            <!-- Botões pa ver likes -->
+            <button class="btn btn-light btn-sm" onclick="location.href='likes.php'" title="Likes">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+
+            <!-- Botão de notificações -->
+            <button class="btn btn-light btn-sm position-relative" onclick="location.href='notificacoes.php'" title="Notificações">
+                <i class="bi bi-bell-fill"></i>
+                <?php if ($notificacao_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $notificacao_count ?>
+                    </span>
+                <?php endif; ?>
+            </button>
+
+            <!-- Dropdown de utilizador -->
+            <div class="dropdown">
+                <button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Conta">
+                    <i class="bi bi-person-circle"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
+                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
+                </ul>
             </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<div class="main">
-    <div class="content">
-        <h2>Notificações</h2>
+
+    <main class="flex-grow-1 p-4">
+        <h2 class="text-primary mb-4">Notificações</h2>
         <?php if (empty($notifications)): ?>
-            <p>Sem notificações por agora.</p>
+            <p class="text-muted">Sem notificações por agora.</p>
         <?php else: ?>
-            <ul>
+            <ul class="list-group">
                 <?php foreach ($notifications as $notif): ?>
-                    <li>
-                        <?= htmlspecialchars($notif['message']) ?><br>
-                        <small><?= date("d/m/Y H:i", strtotime($notif['created_at'])) ?></small>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <?= htmlspecialchars($notif['message']) ?><br>
+                            <small class="text-muted">
+                                <?= date("d/m/Y H:i", strtotime($notif['created_at'])) ?>
+                            </small>
+                        </div>
                     </li>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
-    </div>
-</div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
