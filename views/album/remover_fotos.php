@@ -13,7 +13,6 @@ if (!isLoggedIn()) {
 }
 
 $albumId = intval($_GET['album_id'] ?? 0);
-$userId = $_SESSION['user_id'];
 
 if (!hasAlbumRole($albumId, 'Administrador')) {
     echo "Acesso negado. Apenas administradores podem remover fotos.";
