@@ -32,18 +32,6 @@ $result = $stmt->get_result();
 $photos = $result->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 $conn->close();
-
-$notificacao_count = 0;
-if (isLoggedIn()) {
-    $conn = db_connect();
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = FALSE");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $stmt->bind_result($notificacao_count);
-    $stmt->fetch();
-    $stmt->close();
-    $conn->close();
-}
 ?>
 
 <!DOCTYPE html>
