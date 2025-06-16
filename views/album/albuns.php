@@ -52,7 +52,7 @@ $conn->close();
 
     <main class="flex-grow-1 p-4">
         <div class="d-flex justify-content-between align-items-center">
-            <h2 class="text-primary mb-4">Os teus álbuns</h2>
+            <h2 class="text-secondary mb-4">Os teus álbuns</h2>
             <a href="criar_album.php" class="btn btn-success btn-sm">
                 <i class="bi bi-plus-circle me-1"></i> Criar Álbum
             </a>

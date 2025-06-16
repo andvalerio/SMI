@@ -42,7 +42,7 @@ $conn->close();
     <?php include_once '../../includes/header.php'; ?>
 
     <main class="flex-grow-1 p-4">
-        <h2 class="text-primary mb-4">Notificações</h2>
+        <h2 class="text-secondary mb-4">Notificações</h2>
         <?php if (empty($notifications)): ?>
             <p class="text-muted">Sem notificações por agora.</p>
         <?php else: ?>

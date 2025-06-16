@@ -137,7 +137,7 @@ $conn->close();
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow-sm p-4">
-                    <h2 class="mb-4">Editar Álbum</h2>
+                    <h2 class="text-center mb-4">Editar Álbum</h2>
 
                     <?php if (!empty($msg)): ?>
                         <div class="alert alert-info"> <?= htmlspecialchars($msg) ?> </div>
@@ -153,12 +153,16 @@ $conn->close();
                             <label for="description" class="form-label">Descrição</label>
                             <textarea class="form-control" id="description" name="description" rows="4"><?= htmlspecialchars($description) ?></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Guardar Alterações</button>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Guardar Alterações</button>
+                        </div>
                     </form>
 
                     <form method="post" id="deleteForm">
-                        <input type="hidden" name="delete_album" value="1">
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete()">Apagar Álbum</button>
+                        <div class="text-center">
+                            <input type="hidden" name="delete_album" value="1">
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Apagar Álbum</button>
+                        </div>
                     </form>
                 </div>
             </div>

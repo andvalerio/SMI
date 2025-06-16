@@ -51,7 +51,7 @@ $conn->close();
     <?php include_once '../../includes/header.php'; ?>
 
     <main class="flex-grow-1 p-4">
-        <h2 class="text-primary mb-4">Fotos Recentes</h2>
+        <h2 class="text-secondary mb-4">Fotos Recentes</h2>
         <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center">
             <?php foreach ($photos as $photo): ?>
                 <div class="photo-card">

@@ -132,7 +132,7 @@ $conn->close();
         <?php endif; ?>
 
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
-            <h2 class="text-primary"><?= htmlspecialchars($title) ?></h2>
+            <h2 class="text-secondary"><?= htmlspecialchars($title) ?></h2>
             <div class="d-flex flex-wrap align-items-center gap-2">
 
                 <?php if ($can_upload): ?>

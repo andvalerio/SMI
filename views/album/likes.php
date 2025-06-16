@@ -53,7 +53,7 @@ $conn->close();
     <?php include_once '../../includes/header.php'; ?>
 
     <main class="flex-grow-1 p-4">
-        <h2 class="text-primary mb-4">Fotos que Gostaste</h2>
+        <h2 class="text-secondary mb-4">Fotos que Gostaste</h2>
         <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center">
             <?php if (count($photos) === 0): ?>
                 <p class="text-muted">Não há fotos que tenhas gostado ainda.</p>
