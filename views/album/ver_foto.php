@@ -112,7 +112,13 @@ $conn->close();
 </head>
 
 <body>
-    <?php include_once '../../includes/header.php'; ?>
+    <?php if ($userCanInteract): ?>
+        <?php include_once '../../includes/header.php'; ?>
+    <?php else: ?>
+        <header class="d-flex justify-content-center align-items-center px-4">
+            <strong onclick="location.href='../auth/login.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
+        </header>
+    <?php endif; ?>
 
     <main class="flex-grow-1 p-4">
         <a href="album.php?id=<?= $albumId ?>" class="btn btn-secondary mb-3">
