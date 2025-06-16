@@ -55,12 +55,20 @@ function handleLogin($conn)
 function handleRegister($conn)
 {
     $msg = "";
+    
+    $email = $_POST['email'] ?? '';
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return "Email inválido.";
+    }
+    if (strlen($_POST['password']) < 5) {
+        return "Password deve ter pelo menos 5 caracteres.";    
+    }
+    $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    
     $username = $_POST['username'] ?? '';
     $full_name = $_POST['full_name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    
     $captcha = $_POST['g-recaptcha-response'] ?? '';
-
     $captchaSuccess = validateCaptcha($captcha);
     if (!$captchaSuccess) {
         $msg = "Erro: CAPTCHA inválido.";

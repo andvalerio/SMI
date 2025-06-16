@@ -46,9 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endif; ?>
 
-                <form method="POST">
+                <form id="formCodigo" method="POST">
                     <div class="mb-3">
-                        <input type="text" name="access_code" class="form-control" placeholder="Código do álbum" required>
+                        <input type="text" id="codigo" name="access_code" class="form-control" placeholder="Código do álbum" required>
                     </div>
                     <button type="submit" class="btn btn-info w-100 shadow">Entrar</button>
                 </form>
@@ -60,6 +60,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
+    <script>
+        document.getElementById("formCodigo").addEventListener("submit", function(e) {
+            const codigo = document.getElementById("codigo").value;
+
+            // Tamanho da password
+            if (codigo.length != 6) {
+                alert("A password deve ter 6 caracteres.");
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 
 </html>

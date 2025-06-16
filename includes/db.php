@@ -26,8 +26,6 @@ function db_connect()
 }
 
 
-
-
 function hasUser($conn, $username, $email) {
     // Verificar se o utilizador já existe
     $stmt = $conn->prepare("SELECT id FROM user WHERE username = ? OR email = ?");

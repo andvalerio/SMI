@@ -43,9 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <?php if (isset($msg)) echo "<div class='alert alert-danger text-center'><strong>$msg</strong></div>"; ?>
 
-        <form action="" method="POST">
-          <input type="text" name="email" class="form-control mb-3" placeholder="Email ou nome de utilizador" required>
-          <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+        <form id="formLogin" action="" method="POST">
+          <input type="text" id="emailUser" name="email" class="form-control mb-3" placeholder="Email ou nome de utilizador" required>
+          <input type="password" id="password" name="password" class="form-control mb-3" placeholder="Password" required>
           <div class="d-flex justify-content-center mb-3">
             <div class="g-recaptcha" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div>
           </div>
@@ -59,6 +59,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
   </div>
+
+  <script>
+    document.getElementById("formLogin").addEventListener("submit", function(e) {
+      const emailUser = document.getElementById("emailUser").value;
+
+      // Validação de espaços no user/email
+      if (/\s/.test(emailUser)) {
+        alert("O email ou nome de utilizador não pode conter espaços.");
+        e.preventDefault(); // impede envio do formulário
+      }
+    });
+  </script>
 </body>
 
 </body>

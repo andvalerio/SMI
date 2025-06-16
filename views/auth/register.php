@@ -3,9 +3,9 @@ require_once '../../libs/vendor/autoload.php';
 require_once '../../controllers/controlador_auth.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $conn = db_connect();
-    $msg = handleRegister($conn);
-    $conn->close();
+  $conn = db_connect();
+  $msg = handleRegister($conn);
+  $conn->close();
 }
 ?>
 <!DOCTYPE html>
@@ -39,11 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <?php if (isset($msg)) echo "<div class='alert alert-danger text-center'><strong>$msg</strong></div>"; ?>
 
-        <form action="" method="POST">
-          <input type="text" name="username" class="form-control mb-3" placeholder="Nome de utilizador" required>
+        <form id="formRegisto" action="" method="POST">
+          <input type="text" id="username" name="username" class="form-control mb-3" placeholder="Nome de utilizador" required>
           <input type="text" name="full_name" class="form-control mb-3" placeholder="Nome completo" required>
-          <input type="email" name="email" class="form-control mb-3" placeholder="Email" required>
-          <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+          <input type="email" id="email" name="email" class="form-control mb-3" placeholder="Email" required>
+          <input type="password" id="password" name="password" class="form-control mb-3" placeholder="Password" required>
           <div class="d-flex justify-content-center mb-3">
             <div class="g-recaptcha" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div>
           </div>
@@ -56,6 +56,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
   </div>
+
+  <script>
+    document.getElementById("formRegisto").addEventListener("submit", function(e) {
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      // Validação de espaços no user/email
+      if (/\s/.test(username)) {
+        alert("O nome de utilizador não pode conter espaços.");
+        e.preventDefault(); // impede envio do formulário
+      }
+
+      // Validação de email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Email inválido.");
+        e.preventDefault(); // Impede envio do formulário
+        return;
+      }
+
+      // Tamanho da password
+      if (password.length < 5) {
+        alert("A password deve ter pelo menos 5 caracteres.");
+        e.preventDefault();
+      }
+    });
+  </script>
 </body>
 
 </html>
