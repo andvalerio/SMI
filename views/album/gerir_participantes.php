@@ -73,29 +73,7 @@ if (isLoggedIn()) {
 </head>
 
 <body>
-
-    <header class="d-flex justify-content-between align-items-center px-4 py-2 border-bottom shadow-sm">
-        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
-        <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-light position-relative" onclick="location.href='notificacoes.php'">
-                <i class="bi bi-bell"></i>
-                <?php if ($notificacao_count > 0): ?>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        <?= $notificacao_count ?>
-                    </span>
-                <?php endif; ?>
-            </button>
-            <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bi bi-person-circle"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
-                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
+    <?php include_once '../../includes/header.php'; ?>
 
     <main class="container py-5">
         <h2 class="mb-4 text-center">Gerir Participantes</h2>

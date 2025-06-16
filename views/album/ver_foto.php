@@ -123,41 +123,7 @@ if (isLoggedIn()) {
 </head>
 
 <body>
-    <header class="d-flex justify-content-between align-items-center px-4">
-        <strong onclick="location.href='homepage.php'" class="fs-4" style="cursor:pointer">Photo Gallery</strong>
-
-        <div class="d-flex align-items-center gap-2">
-            <!-- Botões pa ver albuns -->
-            <button class="btn btn-light btn-sm" onclick="location.href='albuns.php'" title="Álbuns">
-                <i class="bi bi-images"></i>
-            </button>
-            <!-- Botões pa ver likes -->
-            <button class="btn btn-light btn-sm" onclick="location.href='likes.php'" title="Likes">
-                <i class="bi bi-heart-fill"></i>
-            </button>
-
-            <!-- Botão de notificações -->
-            <button class="btn btn-light btn-sm position-relative" onclick="location.href='notificacoes.php'" title="Notificações">
-                <i class="bi bi-bell-fill"></i>
-                <?php if ($notificacao_count > 0): ?>
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        <?= $notificacao_count ?>
-                    </span>
-                <?php endif; ?>
-            </button>
-
-            <!-- Dropdown de utilizador -->
-            <div class="dropdown">
-                <button class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" title="Conta">
-                    <i class="bi bi-person-circle"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="../auth/account.php">Alterar dados da conta</a></li>
-                    <li><a class="dropdown-item" href="../logout.php">Terminar sessão</a></li>
-                </ul>
-            </div>
-        </div>
-    </header>
+    <?php include_once '../../includes/header.php'; ?>
 
     <main class="flex-grow-1 p-4">
         <a href="album.php?id=<?= $albumId ?>" class="btn btn-secondary mb-3">
