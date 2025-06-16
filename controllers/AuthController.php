@@ -131,7 +131,6 @@ function validateCaptcha($captcha)
 
 function sendVerificationEmail($email, $full_name, $token)
 {
-    // Carregar config.xml para as credenciais do Mailjet
     $xml = simplexml_load_file(__DIR__ . '/../config.xml') or die("No XML file found");
     $mailjetApiKey = (string) $xml->phpMailer->APIKey;
     $mailjetApiSecret = (string) $xml->phpMailer->APISecret;
