@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Sanitizar o nome do álbum
     $album_name = trim($_POST["albumname"]);
-    $album_name = preg_replace('/[^a-zA-Z0-9_-]/', '', $album_name);
+    $album_name = preg_replace('/[^a-zA-Z0-9 _-]/', '', $album_name);
 
     if (empty($album_name)) {
         $erros .= "Erro: Nome inválido para o título do álbum. <br>";
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = $_POST["description"];
         $access_code = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'), 0, 6);
 
-        $stmt_album = $conn->prepare($query_add_album);
+        $stmt_album = $conn->prepare("INSERT INTO album (title, description, access_code, owner_id) VALUES (?, ?, ?, ?)");
         $stmt_album->bind_param("sssi", $album_name, $description, $access_code, $userId);
 
         if ($stmt_album->execute()) {
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Atribuir o papel de administrador ao criador do álbum
             $role = "Administrador";
-            $stmt_user_album = $conn->prepare($query_add_user_album);
+            $stmt_user_album = $conn->prepare("INSERT INTO user_album (album_id, user_id, role) VALUES (?, ?, ?)");
             $stmt_user_album->bind_param("iis", $album_id, $userId, $role);
             $stmt_user_album->execute();
         } else {

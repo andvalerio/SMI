@@ -1,12 +1,8 @@
 <?php
-$site_name = "My Photo Gallery";
 $CONTENT_FOLDER = "../../assets/content/";
-$max_file_size = 5 * 1024 * 1024; // 5MB
-$allowed_extensions = ["jpg", "jpeg", "png", "gif"];
-
-$query_add_album = "INSERT INTO album (title, description, access_code, owner_id) VALUES (?, ?, ?, ?)";
-$query_add_photo = "INSERT INTO photo (filename, filepath, upload_by, album_id) VALUES (?, ?, ?, ?)";
-$query_add_user_album = "INSERT INTO user_album (album_id, user_id, role) VALUES (?, ?, ?)";
+$max_file_size = 50 * 1024 * 1024; // 50 MB
+$allowed_extensions_photo = ["jpg", "jpeg", "png", "gif"];
+$allowed_extensions_video = ["mp4", "mov"];
 
 function db_connect()
 {
@@ -25,7 +21,6 @@ function db_connect()
     return $conn;
 }
 
-
 function hasUser($conn, $username, $email) {
     // Verificar se o utilizador já existe
     $stmt = $conn->prepare("SELECT id FROM user WHERE username = ? OR email = ?");
@@ -41,5 +36,3 @@ function hasUser($conn, $username, $email) {
         return true;
     }
 }
-
-function insert_image_in_database() {}
