@@ -140,7 +140,7 @@ $conn->close();
                     <input type="text" id="accessCode" value="<?= htmlspecialchars($accessCode) ?>" class="form-control form-control-sm" style="width: 130px;" readonly>
                     <button class="btn btn-outline-secondary btn-sm" onclick="copyAccessCode()"><i class="bi bi-clipboard"></i></button>
                     <a href="gerir_participantes.php?album_id=<?= $albumId ?>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-people"></i> Membros</a>
-                    <a href="upload_fotos.php?album_id=<?= $albumId ?>" class="btn btn-sm btn-success"><i class="bi bi-upload"></i> Adicionar Fotos</a>
+                    <a href="uploads.php?album_id=<?= $albumId ?>" class="btn btn-sm btn-success"><i class="bi bi-upload"></i> Adicionar Fotos</a>
                 <?php endif; ?>
 
                 <?php if ($can_add_user): ?>

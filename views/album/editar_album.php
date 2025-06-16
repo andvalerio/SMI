@@ -164,6 +164,8 @@ $conn->close();
                             <button type="button" class="btn btn-danger" onclick="confirmDelete()">Apagar Álbum</button>
                         </div>
                     </form>
+
+                    <a href="album.php?id=<?= $albumId ?>">Voltar</a>
                 </div>
             </div>
         </div>

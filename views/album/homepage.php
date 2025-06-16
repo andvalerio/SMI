@@ -53,26 +53,36 @@ $conn->close();
     <main class="flex-grow-1 p-4">
         <h2 class="text-secondary mb-4">Fotos Recentes</h2>
         <div class="d-flex flex-wrap gap-3 justify-content-center align-items-center">
-            <?php foreach ($photos as $photo): ?>
-                <div class="photo-card">
-                    <a href="album.php?id=<?= urlencode($photo['album_id'] ?? '') ?>">
-                        <?php
-                        $ext = strtolower(pathinfo($photo['filename'], PATHINFO_EXTENSION));
-                        $is_video = in_array($ext, ['mp4', 'mov']);
-                        if ($is_video): ?>
-                            <video autoplay muted loop playsinline
-                                style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
-                                <source src="<?= htmlspecialchars($photo['filepath']) ?>" type="video/mp4">
-                            </video>
-                        <?php else: ?>
-                            <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
-                        <?php endif; ?>
-                    </a>
-                    <div class="mt-2 text-muted small">
-                        Álbum: <?= htmlspecialchars($photo['title']) ?>
+
+            <?php
+            if (count($photos) > 0):
+                foreach ($photos as $photo): ?>
+                    <div class="photo-card">
+                        <a href="album.php?id=<?= urlencode($photo['album_id'] ?? '') ?>">
+                            <?php
+                            $ext = strtolower(pathinfo($photo['filename'], PATHINFO_EXTENSION));
+                            $is_video = in_array($ext, ['mp4', 'mov']);
+                            if ($is_video): ?>
+                                <video autoplay muted loop playsinline
+                                    style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+                                    <source src="<?= htmlspecialchars($photo['filepath']) ?>" type="video/mp4">
+                                </video>
+                            <?php else: ?>
+                                <img src="<?= htmlspecialchars($photo['filepath']); ?>" alt="<?= htmlspecialchars($photo['filename']); ?>">
+                            <?php endif; ?>
+                        </a>
+                        <div class="mt-2 text-muted small">
+                            Álbum: <?= htmlspecialchars($photo['title']) ?>
+                        </div>
                     </div>
+                <?php
+                endforeach;
+            else: ?>
+                <div class="d-flex justify-content-center align-items-center flex-column text-center">
+                    <p>Ainda não tem uma foto a apresentar.</p>
+                    <a class="btn btn-secondary mt-2" href="albuns.php">Crie agora um álbum</a>
                 </div>
-            <?php endforeach; ?>
+            <?php endif; ?>
 
         </div>
     </main>
