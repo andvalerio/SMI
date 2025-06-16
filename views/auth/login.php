@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once '../../includes/db.php';
 require_once '../../includes/session.php';
 require_once '../../controllers/AuthController.php';
@@ -10,8 +6,8 @@ require_once '../../controllers/AuthController.php';
 $msg = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $conn = db_connect();
-    $msg = handleLogin($conn);
+  $conn = db_connect();
+  $msg = handleLogin($conn);
 }
 ?>
 
@@ -41,17 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <!-- Formulário à direita -->
-    <div class="col-md-6 right-side d-flex align-items-center justify-content-center">
-      <div class="login-box">
+    <div class="col-md-6 right-side d-flex align-items-center justify-content-center p-5">
+      <div class="login-box w-100 p-5">
         <h2 class="text-center mb-4">LOGIN</h2>
 
         <?php if (isset($msg)) echo "<div class='alert alert-danger text-center'><strong>$msg</strong></div>"; ?>
 
         <form action="" method="POST">
-          <input type="text" name="email" class="form-control" placeholder="Email ou nome de utilizador:" required>
-          <input type="password" name="password" class="form-control" placeholder="Password" required>
-          <div class="g-recaptcha mb-3" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div>
-          <button type="submit" class="btn btn-login">Entrar</button>
+          <input type="text" name="email" class="form-control mb-3" placeholder="Email ou nome de utilizador" required>
+          <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
+          <div class="d-flex justify-content-center mb-3">
+            <div class="g-recaptcha" data-sitekey="6Ld8g0UrAAAAAA0aryyBRoONa67Ec5nXegiz5ymn"></div>
+          </div>
+          <button type="submit" class="btn btn-info w-100 shadow">Entrar</button>
         </form>
 
         <div class="text-center mt-3">
@@ -64,4 +62,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 
 </body>
+
 </html>

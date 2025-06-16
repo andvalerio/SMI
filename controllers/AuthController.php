@@ -88,8 +88,24 @@ function handleRegister($conn)
         }
         $stmt->close();
     }
-    $conn->close();
     return $msg;
+}
+
+function enterViaCodigo($conn, $code)
+{
+    $albumId = "";
+    $stmt = $conn->prepare("SELECT id FROM album WHERE access_code = ?");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+    $stmt->bind_result($albumId);
+
+    if ($stmt->fetch()) {
+        $_SESSION['guest_album'] = $albumId;
+        header("Location: ../album/album.php?id=$albumId");
+        exit();
+    }
+    $stmt->close();
+    return "Código inválido.";
 }
 
 function verify()

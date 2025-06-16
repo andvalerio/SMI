@@ -14,6 +14,6 @@
         <fromName>Photo Gallery</fromName>
     </phpMailer>
     <server>
-        <host>http://localhost/examples-smi/TrabalhoFinal/SMI</host>
+        <host>http://localhost/examples-smi/TrabalhoFinal/SMI/views/auth</host>
     </server>
 </config>

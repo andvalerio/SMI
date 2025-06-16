@@ -4,11 +4,16 @@ html, body {
   font-family: 'Segoe UI', sans-serif;
 }
 
+
 .left-side {
-  flex: 1.5;
   background: url('imgs/login.jpg') no-repeat center center;
   background-size: cover;
   height: 100%;
+}
+
+/* 
+{
+  flex: 1.5;
   color: white;
   font-size: 2rem;
   font-weight: bold;
@@ -17,7 +22,6 @@ html, body {
   justify-content: center;
   text-align: center;
 }
-
 
 .right-side {
   flex: 1;
